@@ -25,6 +25,10 @@ class AppSettings(context: Context) {
         get() = prefs.getString(KEY_NOTE, "").orEmpty()
         set(value) = prefs.edit().putString(KEY_NOTE, value).apply()
 
+    var site: SiteRecord
+        get() = SiteRecord.decode(prefs.getString(KEY_SITE, null)).site
+        set(value) = prefs.edit().putString(KEY_SITE, value.cleaned().encode().orEmpty()).apply()
+
     var flash: String
         get() = prefs.getString(KEY_FLASH, "off") ?: "off"
         set(value) = prefs.edit().putString(KEY_FLASH, value).apply()
@@ -35,6 +39,7 @@ class AppSettings(context: Context) {
         const val KEY_ALTITUDE = "altitude"
         const val KEY_HEADING = "heading"
         const val KEY_NOTE = "note"
+        const val KEY_SITE = "site"
         const val KEY_FLASH = "flash"
     }
 }

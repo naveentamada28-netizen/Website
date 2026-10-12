@@ -41,6 +41,28 @@ class StampTextTest {
     }
 
     @Test
+    fun stampsTheClientLandmarkAndBoundary() {
+        val lines = StampText.lines(
+            sample().copy(
+                site = SiteRecord(
+                    client = "Ravi Kumar",
+                    mobile = "9876543210",
+                    landmark = "Near the water tank",
+                    north = "Main road",
+                    east = "Plot 12",
+                    south = "Canal",
+                    west = "Lane"
+                )
+            )
+        )
+        assertTrue(lines.any { it == "Client: Ravi Kumar" })
+        assertTrue(lines.any { it == "Mobile: 9876543210" })
+        assertTrue(lines.any { it == "Landmark: Near the water tank" })
+        assertTrue(lines.any { it.startsWith("Bounds:") && it.contains("N Main road") && it.contains("W Lane") })
+        assertEquals("Plot 14", lines.last())
+    }
+
+    @Test
     fun reportsMissingGps() {
         val lines = StampText.lines(
             sample().copy(

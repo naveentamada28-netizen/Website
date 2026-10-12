@@ -22,7 +22,7 @@ object ReportLayout {
         margin: Float = 28f,
         header: Float = 64f,
         gap: Float = 12f,
-        captionHeight: Float = 78f
+        captionHeight: Float = 156f
     ): List<ReportCell> {
         val topStart = margin + header
         val gridBottom = pageHeight - margin

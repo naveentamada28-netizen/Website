@@ -27,7 +27,14 @@ object PhotoCaption {
             ?.let { extras += "HDG ${it.roundToInt()}°" }
         if (extras.isNotEmpty()) lines += extras.joinToString("   ")
         exif.getAttribute(ExifInterface.TAG_USER_COMMENT)?.trim()?.takeIf { it.isNotEmpty() }?.let { lines += it }
-        exif.getAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION)?.trim()?.takeIf { it.isNotEmpty() }?.let { lines += it }
+        val description = exif.getAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION)?.trim().orEmpty()
+        val decoded = SiteRecord.decode(description)
+        if (decoded.recognized) {
+            lines += decoded.site.lines(useDms = false)
+            decoded.note.trim().takeIf { it.isNotEmpty() }?.let { lines += it }
+        } else if (description.isNotEmpty()) {
+            lines += description
+        }
         return lines.ifEmpty { listOf(context.getString(R.string.no_metadata)) }
     }
 }

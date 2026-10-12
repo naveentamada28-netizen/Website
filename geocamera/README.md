@@ -1,12 +1,12 @@
 # NT™ Geo Camera
 
-Light-themed camera for Android and iPhone. Photos are stamped with time, GPS, accuracy, altitude, heading, address, and a site note. Video records at the highest quality the phone offers, up to 4K. The gallery builds one PDF with four photos on each page and the details under every photo.
+Light-themed camera for Android and iPhone. Photos are stamped with time, GPS, accuracy, altitude, heading, address, and a site note. Each photo can also carry client details, a mobile number, and a landmark with the north, east, south, and west sides plus GPS corners walked around the boundary. Video records at the highest quality the phone offers, up to 4K. The gallery builds one PDF with four photos on each page and the details under every photo.
 
 The camera opens as soon as the app starts. There is no account, password, or hosting website.
 
 ## Install the Android APK
 
-`dist/GeoCamera.apk` is the signed release, version 1.2.0. Android 8 or newer. Allow camera, microphone, and location.
+`dist/GeoCamera.apk` is the signed release, version 1.3.0. Android 8 or newer. Allow camera, microphone, and location. Use **Add client, mobile, and landmark** before a shot. Mark a corner while standing on each boundary point.
 
 ## iPhone
 

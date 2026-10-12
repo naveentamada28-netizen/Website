@@ -37,6 +37,7 @@ import coil.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nt280793.geocamera.databinding.ActivityMainBinding
 import com.nt280793.geocamera.databinding.DialogSettingsBinding
+import com.nt280793.geocamera.databinding.DialogSiteBinding
 import android.provider.MediaStore
 import java.io.File
 import java.util.Locale
@@ -102,6 +103,7 @@ class MainActivity : AppCompatActivity(), android.hardware.SensorEventListener {
         binding.noteInput.setText(settings.note)
         binding.noteInput.doAfterTextChanged { renderHud() }
         binding.flashButton.setOnClickListener { cycleFlash() }
+        binding.siteButton.setOnClickListener { showSite() }
         binding.settingsButton.setOnClickListener { showSettings() }
         binding.flipButton.setOnClickListener { if (!recording) flipCamera() }
         binding.modeButton.setOnClickListener { toggleMode() }
@@ -281,6 +283,9 @@ class MainActivity : AppCompatActivity(), android.hardware.SensorEventListener {
             location?.let { loc ->
                 put(MediaStore.Video.Media.LATITUDE, loc.latitude)
                 put(MediaStore.Video.Media.LONGITUDE, loc.longitude)
+            }
+            settings.site.encode(binding.noteInput.text?.toString().orEmpty())?.let { packed ->
+                put(MediaStore.Video.Media.DESCRIPTION, packed)
             }
         }
         val options = MediaStoreOutputOptions.Builder(
@@ -485,6 +490,7 @@ class MainActivity : AppCompatActivity(), android.hardware.SensorEventListener {
             headingDeg = heading,
             address = address,
             note = note,
+            site = settings.site,
             useDms = settings.useDms,
             showAddress = settings.showAddress,
             showAltitude = settings.showAltitude,
@@ -503,6 +509,8 @@ class MainActivity : AppCompatActivity(), android.hardware.SensorEventListener {
         if (!::binding.isInitialized) return
         val info = currentInfo(binding.noteInput.text?.toString().orEmpty(), System.currentTimeMillis())
         binding.stampText.text = StampText.block(info)
+        val siteSummary = settings.site.summary()
+        binding.siteButton.text = siteSummary.ifBlank { getString(R.string.site_button_empty) }
         binding.gpsChip.text = gpsLabel()
         binding.gpsChip.setTextColor(ContextCompat.getColor(this, gpsColor()))
         binding.flashButton.setText(flashLabel())
@@ -540,6 +548,69 @@ class MainActivity : AppCompatActivity(), android.hardware.SensorEventListener {
         "on" -> R.string.flash_on
         "auto" -> R.string.flash_auto
         else -> R.string.flash_off
+    }
+
+    private fun showSite() {
+        val form = DialogSiteBinding.inflate(layoutInflater)
+        var draft = settings.site
+        form.clientInput.setText(draft.client)
+        form.mobileInput.setText(draft.mobile)
+        form.landmarkInput.setText(draft.landmark)
+        form.northInput.setText(draft.north)
+        form.eastInput.setText(draft.east)
+        form.southInput.setText(draft.south)
+        form.westInput.setText(draft.west)
+        fun showCorners() {
+            val list = draft.cornerList(settings.useDms)
+            form.cornersText.text = list.ifBlank { getString(R.string.no_corners) }
+        }
+        showCorners()
+        form.markCorner.setOnClickListener {
+            val loc = location
+            if (loc == null) {
+                Toast.makeText(this, R.string.gps_needed, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (draft.corners.size >= SiteRecord.MAX_CORNERS) {
+                Toast.makeText(this, R.string.corner_limit, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            draft = draft.copy(corners = draft.corners + BoundaryPoint(loc.latitude, loc.longitude))
+            showCorners()
+        }
+        form.removeCorner.setOnClickListener {
+            if (draft.corners.isEmpty()) return@setOnClickListener
+            draft = draft.copy(corners = draft.corners.dropLast(1))
+            showCorners()
+        }
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.site_title)
+            .setView(form.root)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.done, null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+                val mobile = form.mobileInput.text?.toString().orEmpty()
+                if (!SiteRecord.mobileOk(mobile)) {
+                    form.mobileError.visibility = View.VISIBLE
+                    return@setOnClickListener
+                }
+                form.mobileError.visibility = View.GONE
+                settings.site = draft.copy(
+                    client = form.clientInput.text?.toString().orEmpty(),
+                    mobile = mobile,
+                    landmark = form.landmarkInput.text?.toString().orEmpty(),
+                    north = form.northInput.text?.toString().orEmpty(),
+                    east = form.eastInput.text?.toString().orEmpty(),
+                    south = form.southInput.text?.toString().orEmpty(),
+                    west = form.westInput.text?.toString().orEmpty()
+                )
+                renderHud()
+                dialog.dismiss()
+            }
+        }
+        dialog.show()
     }
 
     private fun showSettings() {

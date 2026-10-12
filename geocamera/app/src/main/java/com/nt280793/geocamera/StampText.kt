@@ -13,6 +13,7 @@ data class StampInfo(
     val headingDeg: Float?,
     val address: String?,
     val note: String?,
+    val site: SiteRecord = SiteRecord(),
     val useDms: Boolean,
     val showAddress: Boolean,
     val showAltitude: Boolean,
@@ -44,6 +45,7 @@ object StampText {
         if (info.showAltitude) info.altitudeM?.let { meta += "Alt ${it.roundToInt()} m" }
         if (info.showHeading) info.headingDeg?.let { meta += headingText(it) }
         if (meta.isNotEmpty()) out += meta.joinToString("   ")
+        out += info.site.lines(info.useDms)
         info.note
             ?.replace('\n', ' ')
             ?.trim()

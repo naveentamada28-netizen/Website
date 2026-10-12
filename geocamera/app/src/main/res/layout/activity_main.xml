@@ -114,31 +114,54 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <EditText
-            android:id="@+id/noteInput"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_note"
-            android:hint="@string/note_hint"
-            android:importantForAutofill="no"
-            android:inputType="textCapSentences|textMultiLine"
-            android:maxLines="2"
-            android:padding="12dp"
-            android:textColor="@color/ink"
-            android:textColorHint="@color/muted"
-            android:textSize="14sp" />
+            android:maxHeight="240dp"
+            android:scrollbars="vertical">
 
-        <TextView
-            android:id="@+id/stampText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_stamp"
-            android:fontFamily="monospace"
-            android:lineSpacingExtra="2dp"
-            android:padding="12dp"
-            android:textColor="@color/text"
-            android:textSize="12sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/siteButton"
+                    style="@style/HudButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="@string/site_button_empty" />
+
+                <EditText
+                    android:id="@+id/noteInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_note"
+                    android:hint="@string/note_hint"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="2"
+                    android:padding="12dp"
+                    android:textColor="@color/ink"
+                    android:textColorHint="@color/muted"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/stampText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_stamp"
+                    android:fontFamily="monospace"
+                    android:lineSpacingExtra="2dp"
+                    android:padding="12dp"
+                    android:textColor="@color/text"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </ScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"

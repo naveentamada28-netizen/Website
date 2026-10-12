@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/client_details"
+            android:textColor="@color/ink"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/clientInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_note"
+            android:hint="@string/client_hint"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLength="160"
+            android:maxLines="3"
+            android:padding="12dp"
+            android:textColor="@color/ink"
+            android:textColorHint="@color/muted" />
+
+        <EditText
+            android:id="@+id/mobileInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_note"
+            android:hint="@string/mobile_number"
+            android:importantForAutofill="no"
+            android:inputType="phone"
+            android:maxLength="20"
+            android:padding="12dp"
+            android:textColor="@color/ink"
+            android:textColorHint="@color/muted" />
+
+        <TextView
+            android:id="@+id/mobileError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/bad_mobile"
+            android:textColor="@color/danger"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/landmark_details"
+            android:textColor="@color/ink"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/landmarkInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_note"
+            android:hint="@string/landmark_hint"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLength="160"
+            android:maxLines="3"
+            android:padding="12dp"
+            android:textColor="@color/ink"
+            android:textColorHint="@color/muted" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/boundary_sides"
+            android:textColor="@color/ink"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/boundary_help"
+            android:textColor="@color/muted"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/northInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_note"
+            android:hint="@string/boundary_north"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences"
+            android:maxLength="80"
+            android:padding="12dp"
+            android:textColor="@color/ink"
+            android:textColorHint="@color/muted" />
+
+        <EditText
+            android:id="@+id/eastInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_note"
+            android:hint="@string/boundary_east"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences"
+            android:maxLength="80"
+            android:padding="12dp"
+            android:textColor="@color/ink"
+            android:textColorHint="@color/muted" />
+
+        <EditText
+            android:id="@+id/southInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_note"
+            android:hint="@string/boundary_south"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences"
+            android:maxLength="80"
+            android:padding="12dp"
+            android:textColor="@color/ink"
+            android:textColorHint="@color/muted" />
+
+        <EditText
+            android:id="@+id/westInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_note"
+            android:hint="@string/boundary_west"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences"
+            android:maxLength="80"
+            android:padding="12dp"
+            android:textColor="@color/ink"
+            android:textColorHint="@color/muted" />
+
+        <TextView
+            android:id="@+id/cornersText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="monospace"
+            android:text="@string/no_corners"
+            android:textColor="@color/ink"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/markCorner"
+                style="@style/HudButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="@string/mark_corner" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/removeCorner"
+                style="@style/HudButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/remove_corner" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

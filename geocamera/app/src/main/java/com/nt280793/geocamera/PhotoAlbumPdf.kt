@@ -87,10 +87,10 @@ object PhotoAlbumPdf {
             color = Color.parseColor("#1B2430")
             textSize = 8.5f
         }
-        var y = cell.imageBottom + 14f
-        PhotoCaption.lines(context, uri).take(5).forEach { line ->
+        var y = cell.imageBottom + 12f
+        PhotoCaption.lines(context, uri).take(12).forEach { line ->
             canvas.drawText(fit(text, line, cell.right - cell.left - 16f), cell.left + 8f, y, text)
-            y += 12f
+            y += 11f
         }
     }
 

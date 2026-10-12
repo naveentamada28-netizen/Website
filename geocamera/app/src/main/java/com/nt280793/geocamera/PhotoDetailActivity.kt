@@ -11,8 +11,6 @@ import androidx.exifinterface.media.ExifInterface
 import coil.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nt280793.geocamera.databinding.ActivityPhotoBinding
-import java.util.Locale
-import kotlin.math.roundToInt
 
 class PhotoDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPhotoBinding
@@ -52,24 +50,12 @@ class PhotoDetailActivity : AppCompatActivity() {
         } catch (_: Exception) {
             null
         } ?: return getString(R.string.no_metadata)
-        val lines = mutableListOf<String>()
-        GeoFormat.prettyExifDate(exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL), Locale.getDefault())
-            ?.let { lines += it }
         val latLong = exif.latLong
         if (latLong != null && latLong.size >= 2) {
             photoLat = latLong[0]
             photoLon = latLong[1]
-            lines += "${GeoFormat.latitude(latLong[0])}   ${GeoFormat.longitude(latLong[1])}"
         }
-        val altitude = exif.getAltitude(Double.NaN)
-        if (!altitude.isNaN()) lines += "Alt ${altitude.roundToInt()} m"
-        GeoFormat.rationalToDouble(exif.getAttribute(ExifInterface.TAG_GPS_IMG_DIRECTION))
-            ?.let { lines += "HDG ${it.roundToInt()}°" }
-        exif.getAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION)
-            ?.trim()
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { lines += it }
-        return if (lines.isEmpty()) getString(R.string.no_metadata) else lines.joinToString("\n")
+        return PhotoCaption.lines(this, uri).joinToString("\n")
     }
 
     private fun share(uri: Uri) {

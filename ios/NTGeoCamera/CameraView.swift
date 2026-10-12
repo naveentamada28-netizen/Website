@@ -5,7 +5,9 @@ import SwiftUI
 struct CameraView: View {
     @StateObject private var model = CameraModel()
     @State private var note = ""
+    @State private var site = SiteRecord.load()
     @State private var showLibrary = false
+    @State private var showSite = false
 
     var body: some View {
         ZStack {
@@ -30,6 +32,11 @@ struct CameraView: View {
                     .padding(12)
                     .background(.white.opacity(0.92))
                     .clipShape(RoundedRectangle(cornerRadius: 14))
+                Button(site.summary.isEmpty ? "Add client, mobile, and landmark" : site.summary) {
+                    showSite = true
+                }
+                .buttonStyle(.bordered)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 TextField("Site or job note", text: $note)
                     .padding(12)
                     .background(.white)
@@ -37,7 +44,7 @@ struct CameraView: View {
                 HStack {
                     Button("Library") { showLibrary = true }
                     Spacer()
-                    Button(action: model.videoMode ? model.toggleRecording : { model.takePhoto(note: note) }) {
+                    Button(action: model.videoMode ? { model.toggleRecording(note: note, site: site) } : { model.takePhoto(note: note, site: site) }) {
                         Circle()
                             .stroke(model.recording ? Color.red : Color(red: 0.66, green: 0.52, blue: 0.18), lineWidth: 5)
                             .background(Circle().fill(.white).padding(6))
@@ -58,6 +65,87 @@ struct CameraView: View {
         .onAppear { model.start() }
         .onDisappear { model.stop() }
         .sheet(isPresented: $showLibrary) { LibraryView() }
+        .sheet(isPresented: $showSite, onDismiss: { site.save() }) {
+            SiteEditor(site: $site, coordinate: { model.currentLocation()?.coordinate })
+        }
+    }
+}
+
+struct SiteEditor: View {
+    @Binding var site: SiteRecord
+    var coordinate: () -> CLLocationCoordinate2D?
+    @Environment(\.dismiss) private var dismiss
+    @State private var mobileError = ""
+    @State private var cornerMessage = ""
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Client details") {
+                    TextField("Name, address, or other client details", text: $site.client, axis: .vertical)
+                    TextField("Mobile number", text: $site.mobile)
+                        .keyboardType(.phonePad)
+                    if !mobileError.isEmpty {
+                        Text(mobileError).font(.caption).foregroundStyle(.red)
+                    }
+                }
+                Section("Landmark") {
+                    TextField("Name and how to recognize this place", text: $site.landmark, axis: .vertical)
+                }
+                Section {
+                    TextField("North boundary", text: $site.north)
+                    TextField("East boundary", text: $site.east)
+                    TextField("South boundary", text: $site.south)
+                    TextField("West boundary", text: $site.west)
+                } header: {
+                    Text("Boundary")
+                } footer: {
+                    Text("Name what lies on each side, then stand at the corners and mark them. Three or more corners close the boundary.")
+                }
+                Section("GPS boundary") {
+                    if site.corners.isEmpty {
+                        Text("No GPS corners yet.")
+                    } else {
+                        ForEach(Array(site.corners.enumerated()), id: \.offset) { index, point in
+                            Text(String(format: "%d. %.6f, %.6f", index + 1, point.latitude, point.longitude))
+                                .font(.caption.monospaced())
+                        }
+                    }
+                    if !cornerMessage.isEmpty {
+                        Text(cornerMessage).font(.caption).foregroundStyle(.red)
+                    }
+                    Button("Mark this corner") {
+                        guard let point = coordinate() else {
+                            cornerMessage = "Wait for a GPS fix before marking a corner."
+                            return
+                        }
+                        guard site.corners.count < 20 else {
+                            cornerMessage = "This boundary already has 20 corners."
+                            return
+                        }
+                        cornerMessage = ""
+                        site.corners.append(BoundaryPoint(latitude: point.latitude, longitude: point.longitude))
+                    }
+                    Button("Remove last") {
+                        if !site.corners.isEmpty { site.corners.removeLast() }
+                    }
+                    .disabled(site.corners.isEmpty)
+                }
+            }
+            .navigationTitle("Client and landmark")
+            .toolbar {
+                Button("Done") {
+                    guard SiteRecord.mobileOk(site.mobile) else {
+                        mobileError = "Enter a mobile number with 10 to 15 digits."
+                        return
+                    }
+                    site.mobile = site.cleanedMobile
+                    mobileError = ""
+                    site.save()
+                    dismiss()
+                }
+            }
+        }
     }
 }
 
@@ -89,6 +177,7 @@ struct LibraryView: View {
                                     }
                                     Text(photo.when).font(.caption2)
                                     Text(photo.coordinate).font(.caption2.monospaced())
+                                    if !photo.site.isEmpty { Text(photo.site).font(.caption2).lineLimit(4) }
                                     if !photo.note.isEmpty { Text(photo.note).font(.caption2) }
                                 }
                                 .padding(8)
@@ -134,6 +223,7 @@ final class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelega
     private let locationManager = CLLocationManager()
     private let queue = DispatchQueue(label: "nt.camera")
     private var pendingNote = ""
+    private var pendingSite = SiteRecord()
     @Published var videoMode = false
     @Published var recording = false
     @Published var qualityLabel = "highest"
@@ -161,8 +251,11 @@ final class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelega
         }
     }
 
-    func takePhoto(note: String) {
+    func currentLocation() -> CLLocation? { location }
+
+    func takePhoto(note: String, site: SiteRecord) {
         pendingNote = note
+        pendingSite = site
         let settings = AVCapturePhotoSettings()
         if let device = AVCaptureDevice.default(for: .video),
            let max = device.activeFormat.supportedMaxPhotoDimensions.max(by: { ($0.width * $0.height) < ($1.width * $1.height) }) {
@@ -171,11 +264,13 @@ final class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelega
         photoOutput.capturePhoto(with: settings, delegate: self)
     }
 
-    func toggleRecording() {
+    func toggleRecording(note: String, site: SiteRecord) {
         if movieOutput.isRecording {
             movieOutput.stopRecording()
             return
         }
+        pendingNote = note
+        pendingSite = site
         let url = PhotoLibrary.folder.appendingPathComponent("GEO_\(Int(Date().timeIntervalSince1970)).mov")
         recording = true
         movieOutput.startRecording(to: url, recordingDelegate: self)
@@ -222,10 +317,15 @@ final class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelega
 
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let data = photo.fileDataRepresentation(), let image = UIImage(data: data) else { return }
-        _ = try? PhotoLibrary.save(image: image, location: location, note: pendingNote)
+        _ = try? PhotoLibrary.save(image: image, location: location, note: pendingNote, site: pendingSite)
     }
 
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        let sidecar = outputFileURL.deletingPathExtension().appendingPathExtension("json")
+        let meta = ["note": pendingNote, "site": pendingSite.caption]
+        if let data = try? JSONSerialization.data(withJSONObject: meta) {
+            try? data.write(to: sidecar)
+        }
         DispatchQueue.main.async { self.recording = false }
     }
 }

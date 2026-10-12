@@ -2,12 +2,93 @@ import CoreLocation
 import Foundation
 import UIKit
 
+struct BoundaryPoint: Codable, Hashable {
+    var latitude: Double
+    var longitude: Double
+}
+
+struct SiteRecord: Codable, Equatable {
+    var client: String = ""
+    var mobile: String = ""
+    var landmark: String = ""
+    var north: String = ""
+    var east: String = ""
+    var south: String = ""
+    var west: String = ""
+    var corners: [BoundaryPoint] = []
+
+    static func digits(_ raw: String) -> String { raw.filter(\.isNumber) }
+
+    static func mobileOk(_ raw: String) -> Bool {
+        if raw.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return true }
+        let count = digits(raw).count
+        return count >= 10 && count <= 15
+    }
+
+    var cleanedMobile: String { String(Self.digits(mobile).prefix(15)) }
+
+    var summary: String {
+        var parts: [String] = []
+        let clientText = client.trimmingCharacters(in: .whitespacesAndNewlines)
+        let landmarkText = landmark.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !clientText.isEmpty { parts.append(clientText) }
+        if !cleanedMobile.isEmpty { parts.append(cleanedMobile) }
+        if !landmarkText.isEmpty { parts.append(landmarkText) }
+        let hasSides = [north, east, south, west].contains { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+        if !corners.isEmpty {
+            parts.append("\(corners.count) corners")
+        } else if hasSides {
+            parts.append("bounds")
+        }
+        return parts.joined(separator: " · ")
+    }
+
+    var caption: String {
+        var lines: [String] = []
+        func add(_ label: String, _ value: String) {
+            let text = value.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+            if !text.isEmpty { lines.append("\(label): \(text)") }
+        }
+        add("Client", client)
+        if !cleanedMobile.isEmpty { lines.append("Mobile: \(cleanedMobile)") }
+        add("Landmark", landmark)
+        let sides = [side("N", north), side("E", east), side("S", south), side("W", west)].compactMap { $0 }
+        if !sides.isEmpty { lines.append("Bounds: \(sides.joined(separator: " · "))") }
+        if !corners.isEmpty {
+            let path = corners.map { String(format: "%.6f, %.6f", $0.latitude, $0.longitude) }.joined(separator: " → ")
+            let closed = corners.count >= 3 ? " (closed)" : ""
+            lines.append("Boundary: \(path)\(closed)")
+        }
+        return lines.joined(separator: "\n")
+    }
+
+    func side(_ label: String, _ value: String) -> String? {
+        let text = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return text.isEmpty ? nil : "\(label) \(text)"
+    }
+
+    static func load() -> SiteRecord {
+        guard let data = UserDefaults.standard.data(forKey: "nt.site"),
+              let site = try? JSONDecoder().decode(SiteRecord.self, from: data) else {
+            return SiteRecord()
+        }
+        return site
+    }
+
+    func save() {
+        if let data = try? JSONEncoder().encode(self) {
+            UserDefaults.standard.set(data, forKey: "nt.site")
+        }
+    }
+}
+
 struct SavedPhoto: Identifiable {
     let id: String
     let imageURL: URL
     let when: String
     let coordinate: String
     let details: String
+    let site: String
     let note: String
 }
 
@@ -19,7 +100,7 @@ enum PhotoLibrary {
         return url
     }
 
-    static func save(image: UIImage, location: CLLocation?, note: String) throws -> SavedPhoto {
+    static func save(image: UIImage, location: CLLocation?, note: String, site: SiteRecord = SiteRecord()) throws -> SavedPhoto {
         let stamp = ISO8601DateFormatter().string(from: Date()).replacingOccurrences(of: ":", with: "-")
         let base = folder.appendingPathComponent("GEO_\(stamp)")
         let imageURL = base.appendingPathExtension("jpg")
@@ -38,14 +119,16 @@ enum PhotoLibrary {
             coordinate = "GPS unavailable"
             details = ""
         }
+        let siteText = site.caption
         let meta: [String: String] = [
             "when": when,
             "coordinate": coordinate,
             "details": details,
+            "site": siteText,
             "note": note
         ]
         try JSONSerialization.data(withJSONObject: meta).write(to: metaURL)
-        return SavedPhoto(id: imageURL.lastPathComponent, imageURL: imageURL, when: when, coordinate: coordinate, details: details, note: note)
+        return SavedPhoto(id: imageURL.lastPathComponent, imageURL: imageURL, when: when, coordinate: coordinate, details: details, site: siteText, note: note)
     }
 
     static func photos() -> [SavedPhoto] {
@@ -59,6 +142,7 @@ enum PhotoLibrary {
                 when: raw?["when"] ?? "",
                 coordinate: raw?["coordinate"] ?? "",
                 details: raw?["details"] ?? "",
+                site: raw?["site"] ?? "",
                 note: raw?["note"] ?? ""
             )
         }
@@ -91,12 +175,12 @@ enum PhotoLibrary {
                         if let image = UIImage(contentsOfFile: photo.imageURL.path) {
                             image.draw(in: CGRect(x: cell.x + 8, y: cell.y + 8, width: cell.width - 16, height: cell.imageHeight - 8))
                         }
-                        let caption = [photo.when, photo.coordinate, photo.details, photo.note]
+                        let caption = [photo.when, photo.coordinate, photo.details, photo.site, photo.note]
                             .filter { !$0.isEmpty }
                             .joined(separator: "\n")
                         (caption as NSString).draw(
-                            in: CGRect(x: cell.x + 8, y: cell.y + cell.imageHeight + 4, width: cell.width - 16, height: 70),
-                            withAttributes: [.font: UIFont.monospacedSystemFont(ofSize: 8, weight: .regular)]
+                            in: CGRect(x: cell.x + 8, y: cell.y + cell.imageHeight + 4, width: cell.width - 16, height: 148),
+                            withAttributes: [.font: UIFont.monospacedSystemFont(ofSize: 7, weight: .regular)]
                         )
                     }
                 }
@@ -126,7 +210,7 @@ enum ReportLayout {
         return (count + perPage - 1) / perPage
     }
 
-    static func cells(margin: CGFloat = 28, header: CGFloat = 64, gap: CGFloat = 12, caption: CGFloat = 78) -> [ReportCell] {
+    static func cells(margin: CGFloat = 28, header: CGFloat = 64, gap: CGFloat = 12, caption: CGFloat = 156) -> [ReportCell] {
         let top = margin + header
         let column = (pageWidth - margin * 2 - gap) / 2
         let row = (pageHeight - margin - top - gap) / 2

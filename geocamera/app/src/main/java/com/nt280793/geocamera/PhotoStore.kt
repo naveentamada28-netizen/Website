@@ -131,8 +131,8 @@ object PhotoStore {
         val taken = GeoFormat.exifDateTime(whenMillis, info.zone)
         exif.setAttribute(ExifInterface.TAG_DATETIME, taken)
         exif.setAttribute(ExifInterface.TAG_DATETIME_ORIGINAL, taken)
-        info.note?.trim()?.takeIf { it.isNotEmpty() }?.let { note ->
-            exif.setAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION, note)
+        info.site.encode(info.note.orEmpty())?.let { packed ->
+            exif.setAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION, packed)
         }
         val comment = listOfNotNull(
             info.address?.trim()?.takeIf { it.isNotEmpty() },
