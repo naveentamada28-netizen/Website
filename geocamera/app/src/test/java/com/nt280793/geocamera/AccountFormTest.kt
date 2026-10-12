@@ -8,7 +8,7 @@ import org.junit.Test
 class AccountFormTest {
     @Test
     fun acceptsAMobileNumberAndRejectsAShortOne() {
-        assertEquals("9876543210", AccountForm.normalizeMobile("+91 98765 43210"))
+        assertEquals("919876543210", AccountForm.normalizeMobile("+91 98765 43210"))
         assertTrue(AccountForm.mobileOk("9876543210"))
         assertFalse(AccountForm.mobileOk("12345"))
         assertTrue(AccountForm.passwordOk("secret1"))
