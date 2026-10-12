@@ -88,7 +88,7 @@ object PhotoAlbumPdf {
             textSize = 8.5f
         }
         var y = cell.imageBottom + 12f
-        PhotoCaption.lines(context, uri).take(12).forEach { line ->
+        PhotoCaption.lines(context, uri).take(14).forEach { line ->
             canvas.drawText(fit(text, line, cell.right - cell.left - 16f), cell.left + 8f, y, text)
             y += 11f
         }

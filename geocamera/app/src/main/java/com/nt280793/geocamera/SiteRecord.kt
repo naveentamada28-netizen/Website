@@ -48,19 +48,16 @@ data class SiteRecord(
         val clean = cleaned()
         val out = mutableListOf<String>()
         labeled(out, "Client", clean.client)
-        if (clean.mobile.isNotEmpty()) out += wrap("Mobile: ${clean.mobile}")
+        if (clean.mobile.isNotEmpty()) out.addAll(wrap("Mobile: ${clean.mobile}"))
         labeled(out, "Landmark", clean.landmark)
-        val sides = listOfNotNull(
-            side("N", clean.north),
-            side("E", clean.east),
-            side("S", clean.south),
-            side("W", clean.west)
-        )
-        if (sides.isNotEmpty()) out += wrap("Bounds: ${sides.joinToString(" · ")}")
+        labeled(out, "North", clean.north)
+        labeled(out, "East", clean.east)
+        labeled(out, "South", clean.south)
+        labeled(out, "West", clean.west)
         if (clean.corners.isNotEmpty()) {
             val path = clean.corners.joinToString(" → ") { pointText(it, useDms) }
             val closed = if (clean.corners.size >= 3) " (closed)" else ""
-            out += wrap("Boundary: $path$closed")
+            out.addAll(wrap("Boundary: $path$closed"))
         }
         return out
     }
@@ -96,7 +93,7 @@ data class SiteRecord(
     }
 
     private fun labeled(out: MutableList<String>, label: String, value: String) {
-        if (value.isNotEmpty()) out += wrap("$label: $value")
+        if (value.isNotEmpty()) out.addAll(wrap("$label: $value"))
     }
 
     companion object {
@@ -157,10 +154,6 @@ data class SiteRecord(
 
         private fun squash(raw: String, limit: Int): String {
             return raw.replace('\n', ' ').replace('\r', ' ').trim().replace(Regex("\\s+"), " ").take(limit)
-        }
-
-        private fun side(label: String, value: String): String? {
-            return value.takeIf { it.isNotEmpty() }?.let { "$label $it" }
         }
 
         private fun pointText(point: BoundaryPoint, useDms: Boolean): String {

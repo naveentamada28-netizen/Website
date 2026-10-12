@@ -55,10 +55,11 @@ class StampTextTest {
                 )
             )
         )
-        assertTrue(lines.any { it == "Client: Ravi Kumar" })
-        assertTrue(lines.any { it == "Mobile: 9876543210" })
-        assertTrue(lines.any { it == "Landmark: Near the water tank" })
-        assertTrue(lines.any { it.startsWith("Bounds:") && it.contains("N Main road") && it.contains("W Lane") })
+        val text = lines.joinToString("\n")
+        assertTrue(text.contains("Client: Ravi Kumar"))
+        assertTrue(text.contains("Mobile: 9876543210"))
+        assertTrue(text.contains("Landmark: Near the water tank"))
+        assertTrue(text.contains("North: Main road") && text.contains("West: Lane"))
         assertEquals("Plot 14", lines.last())
     }
 

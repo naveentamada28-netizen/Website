@@ -52,19 +52,16 @@ struct SiteRecord: Codable, Equatable {
         add("Client", client)
         if !cleanedMobile.isEmpty { lines.append("Mobile: \(cleanedMobile)") }
         add("Landmark", landmark)
-        let sides = [side("N", north), side("E", east), side("S", south), side("W", west)].compactMap { $0 }
-        if !sides.isEmpty { lines.append("Bounds: \(sides.joined(separator: " · "))") }
+        add("North", north)
+        add("East", east)
+        add("South", south)
+        add("West", west)
         if !corners.isEmpty {
             let path = corners.map { String(format: "%.6f, %.6f", $0.latitude, $0.longitude) }.joined(separator: " → ")
             let closed = corners.count >= 3 ? " (closed)" : ""
             lines.append("Boundary: \(path)\(closed)")
         }
         return lines.joined(separator: "\n")
-    }
-
-    func side(_ label: String, _ value: String) -> String? {
-        let text = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        return text.isEmpty ? nil : "\(label) \(text)"
     }
 
     static func load() -> SiteRecord {
@@ -179,7 +176,7 @@ enum PhotoLibrary {
                             .filter { !$0.isEmpty }
                             .joined(separator: "\n")
                         (caption as NSString).draw(
-                            in: CGRect(x: cell.x + 8, y: cell.y + cell.imageHeight + 4, width: cell.width - 16, height: 148),
+                            in: CGRect(x: cell.x + 8, y: cell.y + cell.imageHeight + 4, width: cell.width - 16, height: 168),
                             withAttributes: [.font: UIFont.monospacedSystemFont(ofSize: 7, weight: .regular)]
                         )
                     }
@@ -210,7 +207,7 @@ enum ReportLayout {
         return (count + perPage - 1) / perPage
     }
 
-    static func cells(margin: CGFloat = 28, header: CGFloat = 64, gap: CGFloat = 12, caption: CGFloat = 156) -> [ReportCell] {
+    static func cells(margin: CGFloat = 28, header: CGFloat = 64, gap: CGFloat = 12, caption: CGFloat = 180) -> [ReportCell] {
         let top = margin + header
         let column = (pageWidth - margin * 2 - gap) / 2
         let row = (pageHeight - margin - top - gap) / 2
