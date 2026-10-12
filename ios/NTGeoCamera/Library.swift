@@ -107,3 +107,41 @@ enum PhotoLibrary {
         }
     }
 }
+
+struct ReportCell {
+    let x: CGFloat
+    let y: CGFloat
+    let width: CGFloat
+    let height: CGFloat
+    let imageHeight: CGFloat
+}
+
+enum ReportLayout {
+    static let pageWidth: CGFloat = 595
+    static let pageHeight: CGFloat = 842
+    static let perPage = 4
+
+    static func pageCount(_ count: Int) -> Int {
+        guard count > 0 else { return 0 }
+        return (count + perPage - 1) / perPage
+    }
+
+    static func cells(margin: CGFloat = 28, header: CGFloat = 64, gap: CGFloat = 12, caption: CGFloat = 78) -> [ReportCell] {
+        let top = margin + header
+        let column = (pageWidth - margin * 2 - gap) / 2
+        let row = (pageHeight - margin - top - gap) / 2
+        var result: [ReportCell] = []
+        for r in 0..<2 {
+            for c in 0..<2 {
+                result.append(ReportCell(
+                    x: margin + CGFloat(c) * (column + gap),
+                    y: top + CGFloat(r) * (row + gap),
+                    width: column,
+                    height: row,
+                    imageHeight: row - caption
+                ))
+            }
+        }
+        return result
+    }
+}

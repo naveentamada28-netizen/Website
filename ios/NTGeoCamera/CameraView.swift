@@ -4,7 +4,6 @@ import SwiftUI
 
 struct CameraView: View {
     @StateObject private var model = CameraModel()
-    @AppStorage("nt.token") private var token = ""
     @State private var note = ""
     @State private var showLibrary = false
 
@@ -20,8 +19,6 @@ struct CameraView: View {
                             .foregroundStyle(Color(red: 0.36, green: 0.42, blue: 0.48))
                     }
                     Spacer()
-                    Button("Log out") { token = "" }
-                        .buttonStyle(.bordered)
                 }
                 .padding(12)
                 .background(.white.opacity(0.92))

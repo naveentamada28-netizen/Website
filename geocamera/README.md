@@ -2,15 +2,11 @@
 
 Light-themed camera for Android and iPhone. Photos are stamped with time, GPS, accuracy, altitude, heading, address, and a site note. Video records at the highest quality the phone offers, up to 4K. The gallery builds one PDF with four photos on each page and the details under every photo.
 
-Sign-in uses a mobile number and password kept on your hosting website. The site stores a password hash, not the readable password.
+The camera opens as soon as the app starts. There is no account, password, or hosting website.
 
 ## Install the Android APK
 
-`dist/GeoCamera.apk` is the signed release. Android 8 or newer. On first launch, enter the website address (the folder that contains `index.php`), then create an account or log in. Allow camera, microphone, and location.
-
-## Hosting website
-
-Upload the `hosting` folder to PHP hosting (PHP 8+). Open `https://your-domain/hosting/` to create an account. Point both apps at that same address. Account files are written to `hosting/data/`, which is blocked from web downloads.
+`dist/GeoCamera.apk` is the signed release, version 1.2.0. Android 8 or newer. Allow camera, microphone, and location.
 
 ## iPhone
 

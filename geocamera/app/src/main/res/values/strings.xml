@@ -60,15 +60,4 @@
     <string name="pdf_empty">Take a photo before making a PDF.</string>
     <string name="pdf_failed">Could not build the PDF.</string>
     <string name="pdf_ready">Photo PDF</string>
-    <string name="login">Login</string>
-    <string name="create_account">Create account</string>
-    <string name="mobile">Mobile number</string>
-    <string name="password">Password</string>
-    <string name="server_url">Hosting website</string>
-    <string name="login_help">Sign in with the mobile number and password stored on your hosting website.</string>
-    <string name="bad_mobile">Enter a mobile number with 10 to 15 digits.</string>
-    <string name="bad_password">Use at least 6 characters.</string>
-    <string name="bad_server">Enter the hosting address, starting with https:// or http://</string>
-    <string name="logout">Log out</string>
-    <string name="contacting_host">Contacting the hosting website…</string>
 </resources>

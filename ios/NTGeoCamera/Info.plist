@@ -9,9 +9,9 @@
     <key>CFBundleName</key>
     <string>NT Geo Camera</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.1.0</string>
+    <string>1.2.0</string>
     <key>CFBundleVersion</key>
-    <string>2</string>
+    <string>3</string>
     <key>NSCameraUsageDescription</key>
     <string>NT Geo Camera uses the camera for photos and full-quality video.</string>
     <key>NSMicrophoneUsageDescription</key>
@@ -26,10 +26,5 @@
     <array>
         <string>UIInterfaceOrientationPortrait</string>
     </array>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
 </dict>
 </plist>

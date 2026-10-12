@@ -92,11 +92,6 @@ class MainActivity : AppCompatActivity(), android.hardware.SensorEventListener {
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        if (!SessionStore(this).isLoggedIn()) {
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-            return
-        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         settings = AppSettings(this)
@@ -563,11 +558,6 @@ class MainActivity : AppCompatActivity(), android.hardware.SensorEventListener {
                 settings.showAltitude = dialog.switchAltitude.isChecked
                 settings.showHeading = dialog.switchHeading.isChecked
                 renderHud()
-            }
-            .setNeutralButton(R.string.logout) { _, _ ->
-                SessionStore(this).clear()
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
             }
             .show()
     }
