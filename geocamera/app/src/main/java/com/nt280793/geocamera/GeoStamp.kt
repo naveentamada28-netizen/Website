@@ -59,7 +59,15 @@ object GeoStamp {
         val textLeft = rect.left + pad * 0.8f + accentWidth
         val maxText = rect.right - textLeft - pad * 0.4f
         var y = rect.top + pad * 0.85f + titleSize
-        canvas.drawText("GEO CAMERA", textLeft, y, titlePaint)
+        val brand = "NT"
+        canvas.drawText(brand, textLeft, y, titlePaint)
+        val brandWidth = titlePaint.measureText(brand)
+        val tmPaint = Paint(titlePaint).apply {
+            textSize = titleSize * 0.42f
+            color = Color.parseColor("#F5C451")
+        }
+        canvas.drawText("TM", textLeft + brandWidth + 4f, y - titleSize * 0.42f, tmPaint)
+        canvas.drawText("  GEO CAMERA", textLeft + brandWidth + tmPaint.measureText("TM") + 6f, y, titlePaint)
         for (line in lines) {
             y += lineGap
             canvas.drawText(fit(bodyPaint, line, maxText), textLeft, y, bodyPaint)

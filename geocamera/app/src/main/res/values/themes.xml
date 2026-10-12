@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.GeoCamera" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">@color/amber</item>
-        <item name="colorOnPrimary">@color/bg</item>
-        <item name="colorSecondary">@color/mint</item>
+    <style name="Theme.GeoCamera" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">@color/amber</item>
         <item name="colorSurface">@color/surface</item>
         <item name="android:statusBarColor">@color/bg</item>
         <item name="android:navigationBarColor">@color/bg</item>
         <item name="android:windowBackground">@color/bg</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:textColor">@color/text</item>
     </style>
 

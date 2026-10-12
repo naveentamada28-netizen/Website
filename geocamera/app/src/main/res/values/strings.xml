@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Geo Camera</string>
+    <string name="app_name">NT Geo Camera</string>
+    <string name="wordmark">NT™ Geo Camera</string>
+    <string name="trademark">NT trademark</string>
     <string name="capture">Take photo</string>
     <string name="flash_off">Off</string>
     <string name="flash_on">On</string>
@@ -11,7 +13,7 @@
     <string name="open_gallery">Open gallery</string>
     <string name="grant_permissions">Allow camera and location</string>
     <string name="open_settings">Open settings</string>
-    <string name="permission_body">Geo Camera needs the camera to take photos and location to stamp GPS coordinates, time, and address on them.</string>
+    <string name="permission_body">NT Geo Camera needs the camera to take photos and video, and location to stamp GPS coordinates, time, and address.</string>
     <string name="permission_denied">Camera permission is off. Allow it in settings to take a geo photo.</string>
     <string name="camera_unavailable">This camera could not be opened. Try the other lens, or check that no other app is using it.</string>
     <string name="waiting_for_gps">Waiting for GPS…</string>
@@ -29,7 +31,7 @@
     <string name="use_dms">Coordinates in degrees, minutes, seconds</string>
     <string name="show_altitude">Show altitude</string>
     <string name="show_heading">Show compass heading</string>
-    <string name="settings_help">The stamp is drawn onto the photo. GPS coordinates are also stored in the file.</string>
+    <string name="settings_help">The stamp is drawn onto the photo. GPS coordinates are also stored in the file. Video is recorded at the highest quality this phone offers.</string>
     <string name="version_label">Version %1$s</string>
     <string name="gallery_subtitle">Pictures/GeoCamera</string>
     <string name="loading">Loading photos…</string>
@@ -45,5 +47,28 @@
     <string name="photo">Photo</string>
     <string name="back">Back</string>
     <string name="gps_unavailable">GPS unavailable</string>
-    <string name="stamp_title">GEO CAMERA</string>
+    <string name="stamp_title">NT GEO CAMERA</string>
+    <string name="mode_photo">Photo</string>
+    <string name="mode_video">Video</string>
+    <string name="photo_quality">Photo</string>
+    <string name="video_quality">Video · highest on this phone: %1$s</string>
+    <string name="video_quality_pending">Video · choosing the highest quality…</string>
+    <string name="video_saved">Video saved at %1$s</string>
+    <string name="video_failed">Could not save the video</string>
+    <string name="stop_recording">Stop video</string>
+    <string name="export_pdf">4-up PDF</string>
+    <string name="pdf_empty">Take a photo before making a PDF.</string>
+    <string name="pdf_failed">Could not build the PDF.</string>
+    <string name="pdf_ready">Photo PDF</string>
+    <string name="login">Login</string>
+    <string name="create_account">Create account</string>
+    <string name="mobile">Mobile number</string>
+    <string name="password">Password</string>
+    <string name="server_url">Hosting website</string>
+    <string name="login_help">Sign in with the mobile number and password stored on your hosting website.</string>
+    <string name="bad_mobile">Enter a mobile number with 10 to 15 digits.</string>
+    <string name="bad_password">Use at least 6 characters.</string>
+    <string name="bad_server">Enter the hosting address, starting with https:// or http://</string>
+    <string name="logout">Log out</string>
+    <string name="contacting_host">Contacting the hosting website…</string>
 </resources>

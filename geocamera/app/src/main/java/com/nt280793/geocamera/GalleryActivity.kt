@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -28,6 +30,34 @@ class GalleryActivity : AppCompatActivity() {
         binding.grid.layoutManager = GridLayoutManager(this, 3)
         binding.grid.adapter = adapter
         binding.grid.addItemDecoration(GapDecoration(resources.displayMetrics.density.times(2).toInt()))
+        binding.pdfButton.setOnClickListener { exportPdf() }
+    }
+
+    private fun exportPdf() {
+        val photos = adapter.current()
+        if (photos.isEmpty()) {
+            Toast.makeText(this, R.string.pdf_empty, Toast.LENGTH_SHORT).show()
+            return
+        }
+        binding.pdfButton.isEnabled = false
+        thread(name = "pdf") {
+            val file = PhotoAlbumPdf.write(this, photos)
+            runOnUiThread {
+                if (isDestroyed) return@runOnUiThread
+                binding.pdfButton.isEnabled = true
+                if (file == null) {
+                    Toast.makeText(this, R.string.pdf_failed, Toast.LENGTH_LONG).show()
+                } else {
+                    val uri = FileProvider.getUriForFile(this, "$packageName.fileprovider", file)
+                    val share = Intent(Intent.ACTION_SEND).apply {
+                        type = "application/pdf"
+                        putExtra(Intent.EXTRA_STREAM, uri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    startActivity(Intent.createChooser(share, getString(R.string.pdf_ready)))
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -55,6 +85,8 @@ class GalleryActivity : AppCompatActivity() {
             items.addAll(next)
             notifyDataSetChanged()
         }
+
+        fun current(): List<Uri> = items.toList()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
             val binding = ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)

@@ -134,7 +134,12 @@ object PhotoStore {
         info.note?.trim()?.takeIf { it.isNotEmpty() }?.let { note ->
             exif.setAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION, note)
         }
-        exif.setAttribute(ExifInterface.TAG_SOFTWARE, "Geo Camera")
+        val comment = listOfNotNull(
+            info.address?.trim()?.takeIf { it.isNotEmpty() },
+            info.accuracyM?.let { "Acc ±${it.roundToInt()} m" }
+        ).joinToString(" | ")
+        if (comment.isNotEmpty()) exif.setAttribute(ExifInterface.TAG_USER_COMMENT, comment)
+        exif.setAttribute(ExifInterface.TAG_SOFTWARE, "NT Geo Camera")
         exif.saveAttributes()
     }
 
