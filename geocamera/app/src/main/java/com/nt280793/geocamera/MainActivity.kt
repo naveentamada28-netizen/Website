@@ -32,6 +32,8 @@ import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
 import coil.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -116,6 +118,13 @@ class MainActivity : AppCompatActivity(), android.hardware.SensorEventListener {
             imageCapture?.targetRotation = binding.preview.display?.rotation ?: Surface.ROTATION_0
         }
         binding.chrome.visibility = View.INVISIBLE
+        val extra = (12 * resources.displayMetrics.density).toInt()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.chrome) { view, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            view.setPadding(bars.left + extra, bars.top + extra, bars.right + extra, bars.bottom + extra)
+            insets
+        }
+        ViewCompat.requestApplyInsets(binding.chrome)
     }
 
     override fun onResume() {

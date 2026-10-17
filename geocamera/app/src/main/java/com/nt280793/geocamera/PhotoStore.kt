@@ -139,7 +139,7 @@ object PhotoStore {
             info.accuracyM?.let { "Acc ±${it.roundToInt()} m" }
         ).joinToString(" | ")
         if (comment.isNotEmpty()) exif.setAttribute(ExifInterface.TAG_USER_COMMENT, comment)
-        exif.setAttribute(ExifInterface.TAG_SOFTWARE, "NT Geo Camera")
+        exif.setAttribute(ExifInterface.TAG_SOFTWARE, "GO-GEO")
         exif.saveAttributes()
     }
 

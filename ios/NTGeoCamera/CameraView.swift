@@ -15,7 +15,7 @@ struct CameraView: View {
             VStack {
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("NT™ Geo Camera").font(.headline)
+                        Text("GO-GEO").font(.headline)
                         Text(model.videoMode ? "Video · \(model.qualityLabel)" : "Photo")
                             .font(.caption)
                             .foregroundStyle(Color(red: 0.36, green: 0.42, blue: 0.48))
@@ -190,7 +190,7 @@ struct LibraryView: View {
                 }
             }
             .background(Color(red: 0.96, green: 0.97, blue: 0.98))
-            .navigationTitle("NT™ Gallery")
+            .navigationTitle("GO-GEO")
             .sheet(isPresented: Binding(get: { shareURL != nil }, set: { if !$0 { shareURL = nil } })) {
                 if let shareURL { ShareLink(item: shareURL) { Text("Share PDF") }.padding() }
             }

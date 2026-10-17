@@ -20,14 +20,15 @@ object ReportLayout {
 
     fun cells(
         margin: Float = 28f,
-        header: Float = 64f,
-        gap: Float = 12f,
-        captionHeight: Float = 180f
+        header: Float = 120f,
+        footer: Float = 40f,
+        gap: Float = 10f,
+        captionHeight: Float = 52f
     ): List<ReportCell> {
         val topStart = margin + header
-        val gridBottom = pageHeight - margin
+        val gridBottom = pageHeight - margin - footer
         val columnWidth = (pageWidth - margin * 2f - gap) / 2f
-        val rowHeight = (gridBottom - topStart - gap) / 2f
+        val rowHeight = ((gridBottom - topStart - gap) / 2f).coerceAtLeast(0f)
         val cells = mutableListOf<ReportCell>()
         for (row in 0..1) {
             for (column in 0..1) {

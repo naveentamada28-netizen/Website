@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDisplayName</key>
-    <string>NT Geo Camera</string>
+    <string>GO-GEO</string>
     <key>CFBundleIdentifier</key>
     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
     <key>CFBundleName</key>
-    <string>NT Geo Camera</string>
+    <string>GO-GEO</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.3.0</string>
+    <string>1.4.0</string>
     <key>CFBundleVersion</key>
-    <string>4</string>
+    <string>5</string>
     <key>NSCameraUsageDescription</key>
-    <string>NT Geo Camera uses the camera for photos and full-quality video.</string>
+    <string>GO-GEO uses the camera for photos and full-quality video.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Video recordings include sound from the microphone.</string>
     <key>NSLocationWhenInUseUsageDescription</key>

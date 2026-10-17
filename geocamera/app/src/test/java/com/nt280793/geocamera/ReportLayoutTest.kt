@@ -29,4 +29,15 @@ class ReportLayoutTest {
         assertTrue(cells[0].right < cells[1].left)
         assertTrue(cells[0].bottom < cells[2].top)
     }
+
+    @Test
+    fun leavesTheFooterClearWhenTheHeadingGrows() {
+        val footer = 40f
+        val cells = ReportLayout.cells(header = 220f, footer = footer)
+        assertEquals(4, cells.size)
+        cells.forEach { cell ->
+            assertTrue(cell.top >= 28f + 220f)
+            assertTrue(cell.bottom <= ReportLayout.pageHeight - 28f - footer)
+        }
+    }
 }

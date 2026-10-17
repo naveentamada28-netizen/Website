@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NT Geo Camera</string>
-    <string name="wordmark">NT™ Geo Camera</string>
+    <string name="app_name">GO-GEO</string>
+    <string name="wordmark">GO-GEO</string>
     <string name="trademark">NT trademark</string>
     <string name="capture">Take photo</string>
     <string name="flash_off">Off</string>
@@ -13,7 +13,7 @@
     <string name="open_gallery">Open gallery</string>
     <string name="grant_permissions">Allow camera and location</string>
     <string name="open_settings">Open settings</string>
-    <string name="permission_body">NT Geo Camera needs the camera to take photos and video, and location to stamp GPS coordinates, time, and address.</string>
+    <string name="permission_body">GO-GEO needs the camera to take photos and video, and location to stamp GPS coordinates, time, and address.</string>
     <string name="permission_denied">Camera permission is off. Allow it in settings to take a geo photo.</string>
     <string name="camera_unavailable">This camera could not be opened. Try the other lens, or check that no other app is using it.</string>
     <string name="waiting_for_gps">Waiting for GPS…</string>
@@ -66,7 +66,7 @@
     <string name="photo">Photo</string>
     <string name="back">Back</string>
     <string name="gps_unavailable">GPS unavailable</string>
-    <string name="stamp_title">NT GEO CAMERA</string>
+    <string name="stamp_title">GO-GEO</string>
     <string name="mode_photo">Photo</string>
     <string name="mode_video">Video</string>
     <string name="photo_quality">Photo</string>

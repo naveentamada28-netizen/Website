@@ -146,46 +146,140 @@ enum PhotoLibrary {
     }
 
     static func makePdf() -> URL? {
-        let items = photos().reversed()
+        let items = Array(photos().reversed())
         guard !items.isEmpty else { return nil }
-        let url = folder.appendingPathComponent("NT-GeoCamera-photos.pdf")
+        let url = folder.appendingPathComponent("GO-GEO-photos.pdf")
         let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: ReportLayout.pageWidth, height: ReportLayout.pageHeight))
-        let cells = ReportLayout.cells()
         let pages = ReportLayout.pageCount(items.count)
+        let margin: CGFloat = 28
+        let footer: CGFloat = 40
         do {
             try renderer.writePDF(to: url) { context in
                 for page in 0..<pages {
                     context.beginPage()
-                    let title = "NT™ Geo Camera    \(page + 1) / \(pages)"
-                    (title as NSString).draw(at: CGPoint(x: 28, y: 28), withAttributes: [.font: UIFont.boldSystemFont(ofSize: 16)])
-                    ("Trademark of NT  ·  4 photos per page" as NSString).draw(
-                        at: CGPoint(x: 28, y: 50),
-                        withAttributes: [.font: UIFont.systemFont(ofSize: 10), .foregroundColor: UIColor.darkGray]
-                    )
                     let start = page * ReportLayout.perPage
-                    let slice = items.dropFirst(start).prefix(ReportLayout.perPage)
+                    let slice = Array(items.dropFirst(start).prefix(ReportLayout.perPage))
+                    let contentTop = drawHeading(slice, margin: margin)
+                    let cells = ReportLayout.cells(margin: margin, header: max(48, contentTop - margin), footer: footer, caption: 52)
                     for (offset, photo) in slice.enumerated() {
                         let cell = cells[offset]
                         let card = CGRect(x: cell.x, y: cell.y, width: cell.width, height: cell.height)
                         UIColor.white.setFill()
-                        UIBezierPath(roundedRect: card, cornerRadius: 10).fill()
-                        if let image = UIImage(contentsOfFile: photo.imageURL.path) {
-                            image.draw(in: CGRect(x: cell.x + 8, y: cell.y + 8, width: cell.width - 16, height: cell.imageHeight - 8))
+                        UIBezierPath(roundedRect: card, cornerRadius: 8).fill()
+                        UIColor(red: 0.84, green: 0.88, blue: 0.93, alpha: 1).setStroke()
+                        UIBezierPath(roundedRect: card, cornerRadius: 8).stroke()
+                        if let image = UIImage(contentsOfFile: photo.imageURL.path), cell.imageHeight > 8 {
+                            image.draw(in: CGRect(x: cell.x + 6, y: cell.y + 6, width: cell.width - 12, height: cell.imageHeight - 8))
                         }
-                        let caption = [photo.when, photo.coordinate, photo.details, photo.site, photo.note]
-                            .filter { !$0.isEmpty }
-                            .joined(separator: "\n")
+                        let caption = [photo.when, photo.coordinate, photo.details].filter { !$0.isEmpty }.joined(separator: "\n")
                         (caption as NSString).draw(
-                            in: CGRect(x: cell.x + 8, y: cell.y + cell.imageHeight + 4, width: cell.width - 16, height: 168),
+                            in: CGRect(x: cell.x + 6, y: cell.y + cell.imageHeight + 2, width: cell.width - 12, height: 46),
                             withAttributes: [.font: UIFont.monospacedSystemFont(ofSize: 7, weight: .regular)]
                         )
                     }
+                    drawFooter(page: page + 1, pages: pages, margin: margin, footer: footer)
                 }
             }
             return url
         } catch {
             return nil
         }
+    }
+
+    private static func drawHeading(_ photos: [SavedPhoto], margin: CGFloat) -> CGFloat {
+        let title = "GO-GEO"
+        (title as NSString).draw(at: CGPoint(x: margin, y: 22), withAttributes: [.font: UIFont.boldSystemFont(ofSize: 20)])
+        var y: CGFloat = 52
+        let body: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 9), .foregroundColor: UIColor(red: 0.11, green: 0.14, blue: 0.19, alpha: 1)]
+        func line(_ label: String, _ values: [String]) {
+            let text = values.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
+            guard !text.isEmpty else { return }
+            let value = "\(label): \(text.joined(separator: "  ·  "))" as NSString
+            let width = ReportLayout.pageWidth - margin * 2
+            let height = value.boundingRect(
+                with: CGSize(width: width, height: 80),
+                options: .usesLineFragmentOrigin,
+                attributes: body,
+                context: nil
+            ).height
+            value.draw(in: CGRect(x: margin, y: y, width: width, height: height), withAttributes: body)
+            y += height + 2
+        }
+        var clients: [String] = []
+        var mobiles: [String] = []
+        var landmarks: [String] = []
+        var north: [String] = []
+        var east: [String] = []
+        var south: [String] = []
+        var west: [String] = []
+        var boundaries: [String] = []
+        var notes: [String] = []
+        for photo in photos {
+            for raw in photo.site.split(separator: "\n") {
+                let row = String(raw)
+                func take(_ prefix: String, _ into: inout [String]) {
+                    if row.hasPrefix(prefix) {
+                        let value = String(row.dropFirst(prefix.count)).trimmingCharacters(in: .whitespaces)
+                        if !value.isEmpty && !into.contains(value) { into.append(value) }
+                    }
+                }
+                take("Client:", &clients)
+                take("Mobile:", &mobiles)
+                take("Landmark:", &landmarks)
+                take("North:", &north)
+                take("East:", &east)
+                take("South:", &south)
+                take("West:", &west)
+                take("Boundary:", &boundaries)
+            }
+            let note = photo.note.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !note.isEmpty && !notes.contains(note) { notes.append(note) }
+        }
+        line("Client", clients)
+        line("Mobile", mobiles)
+        line("Landmark", landmarks)
+        if [north, east, south, west].contains(where: { !$0.isEmpty }) {
+            let sides = [("North", north), ("East", east), ("South", south), ("West", west)]
+            let col = (ReportLayout.pageWidth - margin * 2) / 2
+            for (index, side) in sides.enumerated() {
+                let rect = CGRect(
+                    x: margin + CGFloat(index % 2) * col,
+                    y: y + CGFloat(index / 2) * 32,
+                    width: col - 6,
+                    height: 28
+                )
+                UIColor(red: 0.96, green: 0.97, blue: 0.98, alpha: 1).setFill()
+                UIBezierPath(roundedRect: rect, cornerRadius: 4).fill()
+                ("\(side.0): \(side.1.joined(separator: " · "))" as NSString).draw(
+                    in: rect.insetBy(dx: 6, dy: 6),
+                    withAttributes: body
+                )
+            }
+            y += 68
+        }
+        line("Boundary", boundaries)
+        line("Note", notes)
+        let lineY = max(y, 58)
+        UIColor(red: 0.84, green: 0.88, blue: 0.93, alpha: 1).setStroke()
+        let rule = UIBezierPath()
+        rule.move(to: CGPoint(x: margin, y: lineY))
+        rule.addLine(to: CGPoint(x: ReportLayout.pageWidth - margin, y: lineY))
+        rule.stroke()
+        return lineY + 8
+    }
+
+    private static func drawFooter(page: Int, pages: Int, margin: CGFloat, footer: CGFloat) {
+        let top = ReportLayout.pageHeight - footer
+        UIColor(red: 0.84, green: 0.88, blue: 0.93, alpha: 1).setStroke()
+        let rule = UIBezierPath()
+        rule.move(to: CGPoint(x: margin, y: top))
+        rule.addLine(to: CGPoint(x: ReportLayout.pageWidth - margin, y: top))
+        rule.stroke()
+        let mark = "NT™"
+        (mark as NSString).draw(at: CGPoint(x: margin, y: top + 12), withAttributes: [.font: UIFont.boldSystemFont(ofSize: 12), .foregroundColor: UIColor(red: 0.66, green: 0.52, blue: 0.18, alpha: 1)])
+        let pageLabel = "Page \(page) / \(pages)" as NSString
+        let width = pageLabel.size(withAttributes: [.font: UIFont.boldSystemFont(ofSize: 10)]).width
+        pageLabel.draw(at: CGPoint(x: ReportLayout.pageWidth - margin - width, y: top + 14), withAttributes: [.font: UIFont.boldSystemFont(ofSize: 10)])
     }
 }
 
@@ -207,10 +301,11 @@ enum ReportLayout {
         return (count + perPage - 1) / perPage
     }
 
-    static func cells(margin: CGFloat = 28, header: CGFloat = 64, gap: CGFloat = 12, caption: CGFloat = 180) -> [ReportCell] {
+    static func cells(margin: CGFloat = 28, header: CGFloat = 120, footer: CGFloat = 40, gap: CGFloat = 10, caption: CGFloat = 52) -> [ReportCell] {
         let top = margin + header
+        let gridBottom = pageHeight - margin - footer
         let column = (pageWidth - margin * 2 - gap) / 2
-        let row = (pageHeight - margin - top - gap) / 2
+        let row = max(0, (gridBottom - top - gap) / 2)
         var result: [ReportCell] = []
         for r in 0..<2 {
             for c in 0..<2 {

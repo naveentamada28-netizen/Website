@@ -28,6 +28,11 @@ class GalleryActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.toolbar.setNavigationOnClickListener { finish() }
         binding.grid.layoutManager = GridLayoutManager(this, 3)
+        binding.grid.post {
+            val column = (112 * resources.displayMetrics.density).toInt().coerceAtLeast(1)
+            val span = (binding.grid.width / column).coerceIn(2, 6)
+            (binding.grid.layoutManager as? GridLayoutManager)?.spanCount = span
+        }
         binding.grid.adapter = adapter
         binding.grid.addItemDecoration(GapDecoration(resources.displayMetrics.density.times(2).toInt()))
         binding.pdfButton.setOnClickListener { exportPdf() }
