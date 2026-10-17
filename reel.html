@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The trick, explained — 3D reel</title>
+<meta name="description" content="A vertical 3D reel explaining how the Roadster leaves the ramp, sticks with fans, and rolls on cold-gas jets.">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: #07080c;
+    color: #e7eef8;
+    font: 16px/1.5 Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  }
+  a { color: inherit; }
+  .top {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 22px;
+  }
+  .brand { font-weight: 800; letter-spacing: .12em; text-decoration: none; }
+  .brand span { color: #8eb6ff; }
+  .top p { margin: 0; color: #9aa8c0; font-size: .92rem; }
+  .top .spacer { margin-left: auto; }
+  .link {
+    text-decoration: none; border: 1px solid #2a3550; border-radius: 999px;
+    padding: 8px 14px; font-weight: 700; font-size: .88rem;
+  }
+  .link:hover { border-color: #6d93ff; }
+  .stage-wrap { display: grid; place-items: center; padding: 6px 16px 18px; }
+  #stage {
+    width: min(440px, 92vw, calc(100vh - 168px) * 0.5625);
+    aspect-ratio: 9 / 16;
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #8fe4f6;
+    cursor: grab;
+    box-shadow: 0 24px 60px rgba(0,0,0,.35);
+  }
+  #stage:active { cursor: grabbing; }
+  #stage canvas { display: block; width: 100%; height: 100%; }
+  #pills {
+    position: absolute; left: 0; right: 0; top: 7%;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    pointer-events: none;
+  }
+  .pill {
+    border-radius: 999px; padding: 6px 12px;
+    font-weight: 800; letter-spacing: .04em; font-size: clamp(11px, 2.6vw, 14px);
+    background: #12151c; color: #fff;
+  }
+  .pill.gold { background: #f5b400; color: #1a1400; }
+  #caption {
+    position: absolute; left: 8%; right: 8%; bottom: 11%;
+    text-align: center; pointer-events: none;
+    font-family: Impact, "Arial Black", "Segoe UI", sans-serif;
+    font-weight: 800; letter-spacing: .01em;
+    font-size: clamp(26px, 6.4vw, 40px);
+    line-height: .95; color: #fff;
+    -webkit-text-stroke: 6px #111;
+    paint-order: stroke fill;
+    text-shadow: 0 2px 0 #111;
+  }
+  #split {
+    position: absolute; left: 0; right: 0; top: 46%; height: 3px;
+    background: rgba(255,255,255,.85); pointer-events: none;
+  }
+  #grip, #weight {
+    position: absolute; pointer-events: none;
+    border-radius: 999px; padding: 5px 10px;
+    font-weight: 900; font-size: clamp(12px, 3vw, 15px);
+  }
+  #grip { left: 18%; top: 57%; background: #f5b400; color: #1a1400; }
+  #weight { left: 54%; top: 52%; background: #e11d3a; color: #fff; }
+  #progress {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(0,0,0,.25);
+  }
+  #progress i { display: block; height: 100%; width: 0; background: #fff; }
+  #replay, #hint {
+    position: absolute; z-index: 2;
+  }
+  #replay {
+    top: 12px; left: 12px; border: 0; border-radius: 999px;
+    background: rgba(0,0,0,.45); color: #fff; font: inherit; font-weight: 700;
+    padding: 7px 12px; cursor: pointer;
+  }
+  #hint {
+    top: 14px; right: 12px; color: #fff; font-size: 12px; font-weight: 700;
+    background: rgba(0,0,0,.4); border-radius: 999px; padding: 6px 10px;
+    pointer-events: none;
+  }
+  .note {
+    width: min(640px, 92vw); margin: 0 auto 28px; color: #9aa8c0; font-size: .92rem;
+  }
+  .note a { color: #c9d8ff; }
+  body.record .top, body.record .note { display: none; }
+  body.record .stage-wrap { padding: 0; }
+  body.record #stage {
+    width: 100vw; height: 100vh; max-width: none; border-radius: 0;
+    aspect-ratio: auto; box-shadow: none; cursor: default;
+  }
+  body.record #replay, body.record #hint { display: none; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html">NT<span>280793</span></a>
+  <p>The trick, explained — vertical 3D reel</p>
+  <span class="spacer"></span>
+  <a class="link" href="media/the-trick-explained.mp4" download>Download video</a>
+</header>
+<div class="stage-wrap">
+  <div id="stage">
+    <div id="pills"></div>
+    <div id="caption"></div>
+    <div id="split" hidden></div>
+    <div id="grip" hidden>GRIP ×2</div>
+    <div id="weight" hidden>WEIGHT</div>
+    <div id="progress"><i></i></div>
+    <button id="replay" type="button">Replay</button>
+    <div id="hint">Drag to orbit</div>
+  </div>
+</div>
+<p class="note">Same kind of explainer as the Threads reel: ramp, suction fans, two carbon-fibre tanks, ten cold-gas nozzles, then the mid-air roll. This page is the 3D cut — drag the car to orbit it. The download is a rendered 9:16 video of that reel. Illustration only, not a Tesla product render.</p>
+<script type="importmap">
+{ "imports": { "three": "./vendor/three/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from "three";
+
+const params = new URLSearchParams(location.search);
+const RECORD = params.has("record");
+const SEEK = params.has("t") ? Number(params.get("t")) : null;
+if (RECORD) document.body.classList.add("record");
+
+const stage = document.getElementById("stage");
+const captionEl = document.getElementById("caption");
+const pillsEl = document.getElementById("pills");
+const splitEl = document.getElementById("split");
+const gripEl = document.getElementById("grip");
+const weightEl = document.getElementById("weight");
+const barEl = document.querySelector("#progress i");
+const hintEl = document.getElementById("hint");
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+stage.insertBefore(renderer.domElement, stage.firstChild);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, 9 / 16, 0.1, 80);
+
+const bgMat = new THREE.ShaderMaterial({
+  side: THREE.BackSide,
+  depthWrite: false,
+  uniforms: {
+    top: { value: new THREE.Color("#5ec8e6") },
+    bottom: { value: new THREE.Color("#d7f8ff") }
+  },
+  vertexShader: "varying float h; void main(){ vec4 w = modelMatrix * vec4(position,1.0); h = w.y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }",
+  fragmentShader: "varying float h; uniform vec3 top; uniform vec3 bottom; void main(){ float k = clamp(h / 7.0 + 0.35, 0.0, 1.0); gl_FragColor = vec4(mix(bottom, top, k), 1.0); }"
+});
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(30, 24, 16), bgMat));
+
+scene.add(new THREE.HemisphereLight(0xf3fbff, 0x6e8ea0, 1.15));
+const key = new THREE.DirectionalLight(0xffffff, 2.4);
+key.position.set(4.5, 8, 5);
+scene.add(key);
+const fill = new THREE.DirectionalLight(0xb7e6ff, 0.7);
+fill.position.set(-6, 3, -3);
+scene.add(fill);
+const rim = new THREE.DirectionalLight(0xffffff, 0.9);
+rim.position.set(-1, 4, -6);
+scene.add(rim);
+
+function radialTex(inner, outer) {
+  const c = document.createElement("canvas");
+  c.width = c.height = 512;
+  const g = c.getContext("2d");
+  const grd = g.createRadialGradient(256, 256, 10, 256, 256, 250);
+  grd.addColorStop(0, inner);
+  grd.addColorStop(1, outer);
+  g.fillStyle = grd;
+  g.fillRect(0, 0, 512, 512);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+const floor = new THREE.Mesh(
+  new THREE.CircleGeometry(7.5, 64),
+  new THREE.MeshBasicMaterial({ map: radialTex("rgba(255,255,255,0.55)", "rgba(255,255,255,0)"), transparent: true, depthWrite: false })
+);
+floor.rotation.x = -Math.PI / 2;
+floor.position.y = 0.001;
+scene.add(floor);
+
+const grid = new THREE.GridHelper(9, 18, 0xb7e4f2, 0xc7edf6);
+grid.position.y = 0.01;
+grid.material.transparent = true;
+grid.material.opacity = 0.45;
+scene.add(grid);
+
+const blob = new THREE.Mesh(
+  new THREE.CircleGeometry(1.15, 40),
+  new THREE.MeshBasicMaterial({ map: radialTex("rgba(40,70,90,0.28)", "rgba(40,70,90,0)"), transparent: true, depthWrite: false })
+);
+blob.rotation.x = -Math.PI / 2;
+blob.position.y = 0.02;
+scene.add(blob);
+
+const road = new THREE.Group();
+const asphalt = new THREE.Mesh(
+  new THREE.PlaneGeometry(28, 8),
+  new THREE.MeshStandardMaterial({ color: 0x171a20, roughness: 0.92 })
+);
+asphalt.rotation.x = -Math.PI / 2;
+road.add(asphalt);
+const pool = new THREE.Mesh(
+  new THREE.PlaneGeometry(7, 7),
+  new THREE.MeshBasicMaterial({ map: radialTex("rgba(255,255,255,0.42)", "rgba(255,255,255,0)"), transparent: true, depthWrite: false })
+);
+pool.rotation.x = -Math.PI / 2;
+pool.position.y = 0.02;
+road.add(pool);
+for (let i = -6; i <= 6; i++) {
+  const dash = new THREE.Mesh(
+    new THREE.BoxGeometry(0.7, 0.02, 0.08),
+    new THREE.MeshBasicMaterial({ color: 0xf2f2f2 })
+  );
+  dash.position.set(i * 1.3, 0.03, 0);
+  road.add(dash);
+}
+const lamp = new THREE.Mesh(
+  new THREE.SphereGeometry(0.18, 16, 12),
+  new THREE.MeshBasicMaterial({ color: 0xfff4d2 })
+);
+lamp.position.set(1.6, 5.4, -2.2);
+road.add(lamp);
+road.visible = false;
+scene.add(road);
+
+const ramp = new THREE.Group();
+const rampMat = new THREE.MeshStandardMaterial({ color: 0x9aa3ad, roughness: 0.6, metalness: 0.2 });
+const rampBed = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.1, 1.7), rampMat);
+rampBed.position.set(-1.15, 0.42, 0);
+rampBed.rotation.z = -0.34;
+ramp.add(rampBed);
+for (const z of [-0.7, 0.7]) {
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(3.3, 0.06, 0.06), rampMat);
+  rail.position.set(-1.15, 0.62, z);
+  rail.rotation.z = -0.34;
+  ramp.add(rail);
+}
+ramp.visible = false;
+scene.add(ramp);
+
+const ceiling = new THREE.Mesh(
+  new THREE.BoxGeometry(5.2, 0.28, 2.3),
+  new THREE.MeshStandardMaterial({ color: 0x8b939e, roughness: 0.72 })
+);
+ceiling.position.set(0, 2.35, 0);
+ceiling.visible = false;
+scene.add(ceiling);
+const suction = new THREE.Mesh(
+  new THREE.PlaneGeometry(2.3, 1.15),
+  new THREE.MeshBasicMaterial({ color: 0x3aa0ff, transparent: true, opacity: 0.35, side: THREE.DoubleSide, depthWrite: false })
+);
+suction.position.set(0, 2.05, 0);
+suction.visible = false;
+scene.add(suction);
+
+function arrowMesh(color) {
+  const g = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.35, metalness: 0.05 });
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.62, 14), mat);
+  shaft.position.y = 0.31;
+  const head = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.3, 16), mat);
+  head.position.y = 0.74;
+  g.add(shaft, head);
+  return g;
+}
+const arrowUp = arrowMesh(0xf5b400);
+const arrowDown = arrowMesh(0xe11d3a);
+arrowDown.rotation.z = Math.PI;
+arrowUp.visible = arrowDown.visible = false;
+scene.add(arrowUp, arrowDown);
+const wheelArrows = [arrowMesh(0xf5b400), arrowMesh(0xf5b400)];
+wheelArrows.forEach(a => { a.scale.setScalar(0.55); a.visible = false; scene.add(a); });
+
+const balloon = new THREE.Group();
+const balloonSkin = new THREE.Mesh(
+  new THREE.SphereGeometry(0.42, 28, 20),
+  new THREE.MeshPhysicalMaterial({ color: 0xd0122a, roughness: 0.18, clearcoat: 1, clearcoatRoughness: 0.12 })
+);
+balloon.add(balloonSkin);
+const shine = new THREE.Mesh(
+  new THREE.SphereGeometry(0.08, 12, 10),
+  new THREE.MeshBasicMaterial({ color: 0xfff })
+);
+shine.position.set(-0.14, 0.16, 0.28);
+balloon.add(shine);
+const knot = new THREE.Mesh(
+  new THREE.SphereGeometry(0.05, 10, 8),
+  new THREE.MeshStandardMaterial({ color: 0x9a1020, roughness: 0.4 })
+);
+knot.position.y = -0.44;
+balloon.add(knot);
+const string = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.012, 0.012, 0.7, 6),
+  new THREE.MeshStandardMaterial({ color: 0xf4f4f4 })
+);
+string.position.y = -0.8;
+balloon.add(string);
+const balloonArrow = arrowMesh(0xf5b400);
+balloonArrow.scale.setScalar(0.7);
+balloonArrow.position.set(0.15, 0.15, 0);
+balloonArrow.rotation.z = -0.7;
+balloon.add(balloonArrow);
+balloon.visible = false;
+scene.add(balloon);
+
+const paint = new THREE.MeshPhysicalMaterial({
+  color: 0xf6f7fb, metalness: 0.12, roughness: 0.28, clearcoat: 0.9, clearcoatRoughness: 0.16,
+  transparent: true, opacity: 1
+});
+const glassMat = new THREE.MeshStandardMaterial({
+  color: 0x163848, metalness: 0.1, roughness: 0.08, transparent: true, opacity: 0.55
+});
+const dark = new THREE.MeshStandardMaterial({ color: 0x1c2128, metalness: 0.4, roughness: 0.45 });
+const metal = new THREE.MeshStandardMaterial({ color: 0x2c3138, metalness: 0.75, roughness: 0.32 });
+const yellow = new THREE.MeshStandardMaterial({ color: 0xf5c400, roughness: 0.35, metalness: 0.08, emissive: 0x5a4300, emissiveIntensity: 0.25 });
+const rubber = new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.7 });
+const alloy = new THREE.MeshStandardMaterial({ color: 0xd5d8de, metalness: 0.8, roughness: 0.28 });
+
+function extrude(pts, depth) {
+  const shape = new THREE.Shape();
+  shape.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) shape.lineTo(pts[i][0], pts[i][1]);
+  shape.closePath();
+  const geo = new THREE.ExtrudeGeometry(shape, {
+    depth, bevelEnabled: true, bevelThickness: 0.035, bevelSize: 0.03, bevelSegments: 2, curveSegments: 10
+  });
+  geo.translate(0, 0, -depth / 2);
+  return geo;
+}
+
+function makeWheel() {
+  const g = new THREE.Group();
+  const tire = new THREE.Mesh(new THREE.TorusGeometry(0.33, 0.078, 16, 32), rubber);
+  g.add(tire);
+  for (let i = 0; i < 5; i++) {
+    const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.2, 0.045), alloy);
+    const a = i * Math.PI * 2 / 5;
+    spoke.position.set(Math.sin(a) * 0.15, Math.cos(a) * 0.15, 0);
+    spoke.rotation.z = -a;
+    g.add(spoke);
+  }
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.09, 18), alloy);
+  hub.rotation.x = Math.PI / 2;
+  g.add(hub);
+  return g;
+}
+
+function makeNozzle() {
+  const g = new THREE.Group();
+  const bell = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.045, 0.16, 16), metal);
+  bell.position.y = 0.08;
+  const core = new THREE.Mesh(
+    new THREE.CircleGeometry(0.04, 16),
+    new THREE.MeshBasicMaterial({ color: 0xff6a2a })
+  );
+  core.position.y = 0.162;
+  core.rotation.x = -Math.PI / 2;
+  g.add(bell, core);
+  const jet = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: radialTex("rgba(255,255,255,0.85)", "rgba(255,255,255,0)"),
+    transparent: true, depthWrite: false
+  }));
+  jet.position.y = 0.62;
+  jet.scale.set(0.55, 1.15, 1);
+  jet.visible = false;
+  g.add(jet);
+  g.userData.jet = jet;
+  return g;
+}
+
+const car = new THREE.Group();
+const body = new THREE.Mesh(extrude([
+  [-2.08, 0.26], [-2.0, 0.52], [-1.35, 0.6], [-0.95, 0.92],
+  [-0.2, 1.0], [0.42, 0.94], [0.82, 0.62], [1.65, 0.5],
+  [2.16, 0.4], [2.2, 0.28], [2.02, 0.2], [-1.92, 0.2]
+], 1.58), paint);
+const glass = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.42, 1.2), glassMat);
+glass.position.set(0.42, 0.78, 0);
+glass.rotation.z = -0.62;
+const sideGlassL = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.28, 0.04), glassMat);
+sideGlassL.position.set(-0.15, 0.82, 0.72);
+const sideGlassR = sideGlassL.clone();
+sideGlassR.position.z = -0.72;
+const sill = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.12, 1.66), dark);
+sill.position.set(0.05, 0.3, 0);
+const nose = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.1, 1.15), dark);
+nose.position.set(2.05, 0.36, 0);
+car.add(body, glass, sideGlassL, sideGlassR, sill, nose);
+
+const wheels = [];
+for (const [x, z] of [[1.28, 0.96], [1.28, -0.96], [-1.22, 0.96], [-1.22, -0.96]]) {
+  const w = makeWheel();
+  w.position.set(x, 0.36, z);
+  car.add(w);
+  wheels.push(w);
+}
+
+const tanks = new THREE.Group();
+for (const z of [-0.34, 0.34]) {
+  const t = new THREE.Mesh(new THREE.SphereGeometry(0.46, 24, 18), yellow);
+  t.scale.set(0.85, 0.62, 0.7);
+  t.position.set(-0.15, 0.52, z);
+  tanks.add(t);
+}
+tanks.visible = false;
+car.add(tanks);
+
+const pods = new THREE.Group();
+const housing = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.28, 1.2), dark);
+housing.position.set(-2.05, 0.5, 0);
+pods.add(housing);
+const rearNozzles = [];
+for (let i = 0; i < 4; i++) {
+  const n = makeNozzle();
+  n.position.set(-2.24, 0.5, -0.42 + i * 0.28);
+  n.rotation.z = Math.PI / 2;
+  pods.add(n);
+  rearNozzles.push(n);
+}
+car.add(pods);
+
+const downNozzles = [];
+for (const [x, z] of [[1.15, 0.48], [1.15, -0.48], [-0.85, 0.48], [-0.85, -0.48]]) {
+  const n = makeNozzle();
+  n.position.set(x, 0.2, z);
+  n.rotation.x = Math.PI;
+  n.visible = false;
+  car.add(n);
+  downNozzles.push(n);
+}
+const yawNozzles = [];
+for (const z of [-0.84, 0.84]) {
+  const n = makeNozzle();
+  n.position.set(1.55, 0.5, z);
+  n.rotation.z = z > 0 ? -Math.PI / 2 : Math.PI / 2;
+  n.scale.setScalar(0.75);
+  n.visible = false;
+  car.add(n);
+  yawNozzles.push(n);
+}
+
+const pipeMat = new THREE.MeshStandardMaterial({ color: 0xd7dde6, metalness: 0.5, roughness: 0.35 });
+const pipes = new THREE.Group();
+function addPipe(ax, ay, az, bx, by, bz) {
+  const a = new THREE.Vector3(ax, ay, az);
+  const b = new THREE.Vector3(bx, by, bz);
+  const dir = b.clone().sub(a);
+  const len = dir.length();
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, len, 8), pipeMat);
+  m.position.copy(a).add(b).multiplyScalar(0.5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+  pipes.add(m);
+}
+addPipe(-0.15, 0.52, -0.34, -1.7, 0.5, -0.2);
+addPipe(-0.15, 0.52, 0.34, -1.7, 0.5, 0.2);
+addPipe(-0.15, 0.5, 0, 1.15, 0.28, 0);
+pipes.visible = false;
+car.add(pipes);
+
+const fans = new THREE.Group();
+for (const [x, z] of [[0.7, 0.4], [0.7, -0.4], [-0.45, 0.4], [-0.45, -0.4]]) {
+  const f = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.16, 0.16, 0.05, 16),
+    new THREE.MeshStandardMaterial({ color: 0x16324a, emissive: 0x1d6dff, emissiveIntensity: 0.8, metalness: 0.4, roughness: 0.4 })
+  );
+  f.position.set(x, 0.24, z);
+  fans.add(f);
+}
+fans.visible = false;
+car.add(fans);
+scene.add(car);
+
+const P = (x, y, z, rx, ry, rz) => ({ x, y, z, rx, ry, rz });
+const beats = [
+  { dur: 1.8, world: "studio", caption: "The trick, explained",
+    camA: [3.8, 2.4, 14.2], camB: [2.8, 2.05, 13.4], lookA: [0, 0.55, 0], lookB: [0.05, 0.5, 0], fov: 32,
+    carA: P(0, 0, 0, 0, 0.4, 0), carB: P(0, 0, 0, 0, 0.05, 0) },
+  { dur: 2.0, world: "night", caption: "No human is inside",
+    camA: [4.2, 2.6, 13.2], camB: [2.6, 2.1, 12.2], lookA: [0, 0.5, 0], lookB: [0.15, 0.45, 0], fov: 34,
+    carA: P(0, 0, 0, 0, 0.45, 0), carB: P(0.25, 0, 0, 0, 0.1, 0) },
+  { dur: 2.0, world: "studio", caption: "Off the ramp", ramp: true, wheelArrows: true,
+    camA: [2.4, 3.0, 12.6], camB: [3.2, 2.5, 11.6], lookA: [-0.1, 0.75, 0], lookB: [0.35, 0.95, 0], fov: 36,
+    carA: P(-1.15, 0.02, 0, 0, -0.2, -0.32), carB: P(0.7, 1.05, 0, 0, 0.25, -0.04) },
+  { dur: 2.0, world: "studio", caption: "keeps air from sneaking back in", ceiling: true, fans: true, arrows: "both",
+    camA: [2.4, 1.2, 12.6], camB: [1.1, 1.15, 11.6], lookA: [0, 1.25, 0], lookB: [0, 1.3, 0], fov: 36,
+    carA: P(0, 1.95, 0, 0, 0.45, Math.PI), carB: P(0, 2.02, 0, 0, 0.15, Math.PI) },
+  { dur: 2.2, world: "studio", caption: "twice the car's weight", ceiling: true, fans: true, arrows: "both", labels: true,
+    pills: [{ t: 'TESLA: "UP TO 2 G"', gold: true }],
+    camA: [2.2, 1.15, 12.4], camB: [0.8, 1.1, 11.4], lookA: [0, 1.25, 0], lookB: [0.05, 1.3, 0], fov: 36,
+    carA: P(0, 1.98, 0, 0, 0.25, Math.PI), carB: P(0.1, 2.02, 0, 0, -0.05, Math.PI) },
+  { dur: 2.2, world: "studio", caption: "two carbon-fibre tanks", cutaway: true, tanks: true,
+    pills: [{ t: "TANK POSITIONS", gold: true }, { t: "2 CARBON-FIBRE TANKS" }],
+    camA: [2.6, 2.3, 5.4], camB: [1.6, 1.9, 4.8], lookA: [0, 0.45, 0], lookB: [-0.1, 0.45, 0], fov: 38,
+    carA: P(0, 0.2, 0, 0.75, 0.55, 0), carB: P(0, 0.2, 0, 0.95, 0.25, 0) },
+  { dur: 2.4, world: "studio", caption: "you let go", caption2: "the other", split: true, jets: 0.8,
+    camA: [0.4, 0.2, 9.2], camB: [0, 0.15, 8.6], lookA: [0, 0.15, 0], lookB: [0, 0.1, 0], fov: 38,
+    carA: P(0, 1.7, 0, 0, 0.55, Math.PI), carB: P(0.1, 1.85, 0, 0, 0.3, Math.PI) },
+  { dur: 1.8, world: "studio", caption: "Under the car", pods: 0.35,
+    camA: [-8.0, 0.7, 0], camB: [-7.2, 0.62, 0], lookA: [-2.1, 0.5, 0], lookB: [-2.15, 0.48, 0], fov: 26,
+    carA: P(0, 0, 0, 0, 0, 0), carB: P(0, 0, 0, 0, 0, 0) },
+  { dur: 1.8, world: "studio", caption: "pulled out to stick", pods: 1,
+    camA: [-6.6, 1.7, 4.2], camB: [-5.6, 1.45, 3.4], lookA: [-0.7, 0.5, 0], lookB: [-0.9, 0.48, 0], fov: 32,
+    carA: P(0, 0, 0, 0, 0.85, 0), carB: P(0, 0, 0, 0, 0.55, 0) },
+  { dur: 2.2, world: "studio", caption: "feeding 10 nozzles", cutaway: true, tanks: true, pipes: true, works: true, pods: 1,
+    pills: [{ t: "LAYOUT: ILLUSTRATION", gold: true }, { t: "10 NOZZLES · 4 AT THE BACK" }],
+    camA: [2.2, 2.5, 5.6], camB: [1.2, 2.0, 5.0], lookA: [-0.15, 0.4, 0], lookB: [-0.3, 0.4, 0], fov: 40,
+    carA: P(0, 0.25, 0, 0.8, 0.9, 0.05), carB: P(0, 0.25, 0, 1.0, 0.55, -0.05) },
+  { dur: 2.0, world: "studio", caption: "Jets slow the fall", jets: 1, pods: 1, arrows: "up",
+    camA: [3.8, 2.3, 12.8], camB: [2.4, 1.9, 11.8], lookA: [0, 0.9, 0], lookB: [0.1, 1.0, 0], fov: 34,
+    carA: P(0, 0.9, 0, 0, 0.5, 0), carB: P(0.15, 1.25, 0, 0, 0.15, 0) },
+  { dur: 2.4, world: "night", caption: "flips in mid-air", jets: 1, pods: 1, arc: 0.85,
+    camA: [4.4, 3.4, 13.2], camB: [3.0, 2.5, 12.0], lookA: [0, 1.4, 0], lookB: [0.25, 1.15, 0], fov: 36,
+    carA: P(-0.6, 1.2, 0, 0, 0.7, 0.25), carB: P(0.8, 1.0, 0, 0, 0.25, Math.PI * 2 + 0.25) },
+  { dur: 2.2, world: "studio", caption: "So it's not magic",
+    camA: [4.2, 2.3, 13.2], camB: [2.4, 1.9, 12.2], lookA: [0, 0.55, 0], lookB: [0.1, 0.5, 0], fov: 34,
+    carA: P(0, 0, 0, 0, 0.5, Math.PI * 2), carB: P(0, 0, 0, 0, -0.3, Math.PI * 2) }
+];
+
+const DURATION = beats.reduce((s, b) => s + b.dur, 0);
+window.REEL_DURATION = DURATION;
+
+function smooth(t) { return t * t * (3 - 2 * t); }
+function lerp(a, b, t) { return a + (b - a) * t; }
+function lerpArr(a, b, t) { return a.map((v, i) => lerp(v, b[i], t)); }
+
+function sample(time) {
+  const t = ((time % DURATION) + DURATION) % DURATION;
+  let acc = 0;
+  for (let i = 0; i < beats.length; i++) {
+    const b = beats[i];
+    if (t < acc + b.dur || i === beats.length - 1) {
+      const u = Math.min(1, Math.max(0, (t - acc) / b.dur));
+      const prev = beats[(i + beats.length - 1) % beats.length];
+      return { beat: b, prev, u, k: smooth(Math.min(1, u / 0.45)), time: t, index: i };
+    }
+    acc += b.dur;
+  }
+}
+
+const studioTop = new THREE.Color("#5ec8e6");
+const studioBot = new THREE.Color("#d9f8ff");
+const nightTop = new THREE.Color("#07090e");
+const nightBot = new THREE.Color("#1a2030");
+const tmp = new THREE.Color();
+
+function apply(time) {
+  const s = sample(time);
+  const b = s.beat;
+  const k = s.k;
+  const pose = {
+    x: lerp(b.carA.x, b.carB.x, k),
+    y: lerp(b.carA.y, b.carB.y, k) + Math.sin(Math.PI * s.u) * (b.arc || 0),
+    z: lerp(b.carA.z, b.carB.z, k),
+    rx: lerp(b.carA.rx, b.carB.rx, k),
+    ry: lerp(b.carA.ry, b.carB.ry, k),
+    rz: lerp(b.carA.rz, b.carB.rz, b.arc ? s.u : k)
+  };
+  car.position.set(pose.x, pose.y, pose.z);
+  car.rotation.set(pose.rx, pose.ry, pose.rz);
+  const spin = (b.ramp || b.jets) ? s.time * 6 : s.time * 0.4;
+  wheels.forEach(w => { w.rotation.z = spin; });
+
+  const nightTarget = b.world === "night" ? 1 : 0;
+  const prevNight = s.prev.world === "night" ? 1 : 0;
+  const night = lerp(prevNight, nightTarget, Math.min(1, s.u / 0.08));
+  bgMat.uniforms.top.value.copy(studioTop).lerp(nightTop, night);
+  bgMat.uniforms.bottom.value.copy(studioBot).lerp(nightBot, night);
+  floor.material.opacity = 1 - night;
+  grid.material.opacity = night > 0.2 ? 0 : 0.35 * (1 - night);
+  road.visible = night > 0.45;
+  ramp.visible = !!b.ramp;
+
+  const cut = b.cutaway ? 0.18 : 1;
+  paint.opacity = cut;
+  paint.depthWrite = cut > 0.9;
+  glassMat.opacity = b.cutaway ? 0.08 : 0.55;
+  tanks.visible = !!b.tanks;
+  pipes.visible = !!b.pipes;
+  fans.visible = !!b.fans;
+  if (b.fans) fans.children.forEach((f, i) => { f.rotation.y = s.time * 8 + i; });
+  ceiling.visible = !!b.ceiling;
+  suction.visible = !!b.ceiling;
+  downNozzles.forEach(n => { n.visible = !!b.works || (b.jets || 0) > 0; });
+  yawNozzles.forEach(n => { n.visible = !!b.works; });
+  const extend = b.pods || 0;
+  pods.position.x = -0.28 * extend;
+
+  const jetOn = b.jets || 0;
+  const allNozzles = rearNozzles.concat(downNozzles, yawNozzles);
+  allNozzles.forEach((n, i) => {
+    const jet = n.userData.jet;
+    const show = jetOn > 0 && (n.visible || rearNozzles.includes(n));
+    jet.visible = show;
+    const flicker = 0.8 + Math.sin(s.time * 22 + i) * 0.2;
+    jet.scale.set(0.7 * jetOn, (1.3 + flicker * 0.55) * jetOn, 1);
+  });
+
+  blob.position.x = pose.x;
+  blob.position.z = pose.z;
+
+  arrowUp.visible = b.arrows === "up" || b.arrows === "both";
+  arrowDown.visible = b.arrows === "both";
+  const arrowY = b.ceiling ? pose.y - 1.55 : pose.y - 1.15;
+  arrowUp.position.set(pose.x - 1.55, arrowY, 0.35);
+  arrowDown.position.set(pose.x + 0.95, arrowY, 0.2);
+  arrowUp.scale.setScalar(1.35);
+  arrowDown.scale.setScalar(1.35);
+  wheelArrows.forEach((a, i) => {
+    a.visible = !!b.wheelArrows;
+    a.scale.setScalar(0.9);
+    a.position.set(pose.x + 0.15, pose.y + 1.25, i === 0 ? 0.7 : -0.7);
+    a.rotation.z = Math.PI;
+  });
+
+  balloon.visible = !!b.split;
+  if (b.split) balloon.position.set(0.2, -1.25, 0);
+  splitEl.hidden = !b.split;
+
+  const camPos = lerpArr(b.camA, b.camB, k);
+  const look = lerpArr(b.lookA, b.lookB, k);
+  const offset = new THREE.Vector3(camPos[0] - look[0], camPos[1] - look[1], camPos[2] - look[2]);
+  if (!RECORD) offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), userYaw);
+  camera.position.set(look[0] + offset.x, look[1] + offset.y, look[2] + offset.z);
+  camera.lookAt(look[0], look[1], look[2]);
+  camera.fov = b.fov;
+  camera.updateProjectionMatrix();
+
+  const cap = b.caption2 && s.u > 0.48 ? b.caption2 : b.caption;
+  if (captionEl.textContent !== cap) captionEl.textContent = cap;
+  const pillKey = JSON.stringify(b.pills || []);
+  if (pillsEl.dataset.key !== pillKey) {
+    pillsEl.dataset.key = pillKey;
+    pillsEl.innerHTML = (b.pills || []).map(p => `<div class="pill${p.gold ? " gold" : ""}">${p.t}</div>`).join("");
+  }
+  gripEl.hidden = !b.labels;
+  weightEl.hidden = !b.labels;
+  barEl.style.width = (s.time / DURATION * 100) + "%";
+}
+
+let userYaw = 0;
+let paused = false;
+let clock0 = performance.now();
+let pausedAt = 0;
+
+function nowSec() {
+  if (paused) return pausedAt;
+  return (performance.now() - clock0) / 1000;
+}
+
+function resize() {
+  const w = stage.clientWidth || 405;
+  const h = stage.clientHeight || 720;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / Math.max(1, h);
+  camera.updateProjectionMatrix();
+}
+resize();
+window.addEventListener("resize", resize);
+
+window.renderAt = (t) => { apply(t); renderer.render(scene, camera); };
+
+function frame() {
+  if (SEEK != null) apply(SEEK);
+  else if (!RECORD) apply(nowSec());
+  if (SEEK != null || !RECORD) renderer.render(scene, camera);
+  if (SEEK == null) requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+document.getElementById("replay").onclick = (e) => {
+  e.stopPropagation();
+  paused = false;
+  clock0 = performance.now();
+  pausedAt = 0;
+};
+
+let drag = null;
+stage.addEventListener("pointerdown", (e) => {
+  if (e.target.closest("button")) return;
+  drag = { x: e.clientX, y: e.clientY, yaw: userYaw, moved: false };
+});
+window.addEventListener("pointermove", (e) => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x;
+  if (Math.abs(dx) > 3) drag.moved = true;
+  userYaw = drag.yaw - dx * 0.008;
+  hintEl.hidden = true;
+});
+window.addEventListener("pointerup", () => {
+  if (!drag) return;
+  if (!drag.moved) {
+    if (paused) {
+      paused = false;
+      clock0 = performance.now() - pausedAt * 1000;
+    } else {
+      pausedAt = nowSec();
+      paused = true;
+    }
+  }
+  drag = null;
+});
+</script>
+</body>
+</html>

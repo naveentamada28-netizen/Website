@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NT280793 — Neon Hero Tools</title>
+<meta name="description" content="NT280793 — neon tools hub with PDF studio and bank statement analysis.">
+<meta name="theme-color" content="#f3f7ff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NT280793">
+<style>
+:root{
+  --bg:#eef4ff;--ink:#13203a;--muted:#5b6b88;--line:#d7e3f7;
+  --card:#ffffffd9;--glass:#ffffffb8;
+  --a:#0077ff;--b:#6d5efc;--c:#00b3c6;--d:#ff4d8d;
+  --iron:#ff5a3d;--cap:#2f6bff;--spy:#e11d74;--thor:#f5b301;--panther:#7a4dff;
+  --shadow:0 18px 40px rgba(40,80,160,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--ink);
+  font:16px/1.55 Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 8% -10%,rgba(0,170,255,.22),transparent 34%),
+    radial-gradient(circle at 92% 6%,rgba(125,90,255,.16),transparent 32%),
+    radial-gradient(circle at 50% 100%,rgba(0,210,180,.10),transparent 28%),
+    linear-gradient(180deg,#f7fbff 0%,#eaf1ff 48%,#f4f7ff 100%);
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.45;
+  background-image:
+    linear-gradient(rgba(20,60,140,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(20,60,140,.045) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:linear-gradient(to bottom,#000,transparent 88%);
+}
+@keyframes rgbShift{to{background-position:220% 0}}
+@keyframes pulse{50%{transform:scale(1.08);opacity:.75}}
+@keyframes floaty{50%{transform:translateY(-8px)}}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+a{text-decoration:none;color:inherit}
+.wrap{width:min(1120px,92%);margin:auto;position:relative;z-index:2}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  backdrop-filter:blur(18px);
+  background:rgba(247,251,255,.78);
+  border-bottom:1px solid rgba(180,205,240,.45);
+}
+nav{height:72px;display:flex;align-items:center;gap:18px}
+.logo{display:inline-flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.10em;font-size:1rem;margin-right:auto}
+.logo-text{background:linear-gradient(90deg,#0b1b3a,#0077ff,#6d5efc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo-mark{width:40px;height:40px;position:relative;display:grid;place-items:center;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 20px rgba(0,119,255,.18)}
+.logo-mark:before{content:"";position:absolute;inset:0;background:conic-gradient(from 0deg,#00c2ff,#6d5efc,#ff4d8d,#00e0c6,#00c2ff);animation:spinSlow 6s linear infinite;opacity:.95}
+.logo-mark:after{content:"";position:absolute;inset:3px;background:#fff;border-radius:9px}
+.logo-mark b{position:relative;z-index:1;font-size:11px;color:#0b1b3a}
+nav .links{display:flex;gap:18px;color:var(--muted);font-size:.9rem;font-weight:600}
+nav .links a{padding:6px 0;border-bottom:2px solid transparent}
+nav .links a:hover{color:var(--a);border-color:var(--a)}
+.nav-actions{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border:1px solid #cfe0f8;border-radius:12px;font-weight:800;background:#fff;transition:.22s;cursor:pointer;color:var(--ink);font:inherit;box-shadow:0 6px 16px rgba(40,80,160,.06)}
+.btn:hover{transform:translateY(-1px);border-color:#8cbcff;box-shadow:0 10px 24px rgba(0,119,255,.14)}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.primary{color:#fff;border-color:transparent;background:linear-gradient(135deg,#1678ff,#6d5efc);box-shadow:0 10px 24px rgba(22,120,255,.28)}
+.primary:hover{color:#fff}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center;padding:54px 0 28px;position:relative}
+.orb{position:absolute;width:420px;height:420px;right:4%;top:-40px;border-radius:50%;filter:blur(10px);background:conic-gradient(from 80deg,rgba(0,170,255,.22),rgba(109,94,252,.16),rgba(255,77,141,.10),rgba(0,170,255,.22));animation:pulse 7s ease-in-out infinite,spinSlow 22s linear infinite;z-index:0}
+.hero-art{position:relative;min-height:320px}
+.hero-art svg{position:absolute;opacity:.22;filter:drop-shadow(0 10px 18px rgba(20,70,160,.18))}
+.hero-art .iron{left:8%;bottom:8%;width:210px;color:#ff5a3d;animation:floaty 5s ease-in-out infinite}
+.hero-art .cap{right:6%;top:10%;width:180px;color:#2f6bff;animation:floaty 6s ease-in-out infinite reverse}
+.hero-art .spy{left:38%;top:18%;width:120px;color:#e11d74;animation:floaty 7s ease-in-out infinite}
+.hero-art .hammer{right:28%;bottom:6%;width:110px;color:#f5b301;animation:floaty 4.5s ease-in-out infinite}
+.badge{display:inline-flex;align-items:center;gap:8px;border:1px solid #c9dcff;padding:7px 12px;border-radius:999px;color:#1554c0;background:#fff;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 8px 20px rgba(21,84,192,.08)}
+h1{font-size:clamp(2.4rem,6vw,4.6rem);line-height:.92;margin:16px 0 14px;letter-spacing:-.06em;color:#0b1b3a}
+h1 em{font-style:normal;background:linear-gradient(90deg,#0077ff,#6d5efc,#00b3c6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:540px;margin:0 0 22px;color:var(--muted);font-size:1.05rem}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+section{padding:56px 0;position:relative;z-index:2}
+.section-head{display:grid;grid-template-columns:1fr minmax(240px,.7fr);gap:24px;align-items:end;margin-bottom:8px}
+.eyebrow{color:#1554c0;font-weight:800;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem}
+.section-title{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.05;margin:8px 0 0;color:#0b1b3a}
+.sub{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}
+.card{padding:22px;border-radius:20px;position:relative;overflow:hidden;background:var(--card);border:1px solid #dbe7fa;box-shadow:var(--shadow);transition:.22s;backdrop-filter:blur(16px);min-height:100%}
+.card:before{content:"";position:absolute;inset:0 auto auto 0;width:100%;height:3px;background:linear-gradient(90deg,var(--accent,#0077ff),var(--accent2,#6d5efc))}
+.card:hover{transform:translateY(-6px);box-shadow:0 22px 40px rgba(40,80,160,.14)}
+.card.iron{--accent:#ff5a3d;--accent2:#ffd000}
+.card.cap{--accent:#2f6bff;--accent2:#7aa4ff}
+.card.spy{--accent:#e11d74;--accent2:#00b3c6}
+.card.pdf{--accent:#00b3c6;--accent2:#1678ff}
+.card.merge{--accent:#f5b301;--accent2:#ff4d8d}
+.card.imgpdf{--accent:#7a4dff;--accent2:#00b3c6}
+.card.bank{--accent:#12b76a;--accent2:#1678ff}
+.card h3{margin:10px 0 6px;font-size:1.15rem}
+.card p{color:var(--muted);margin:0 0 16px;font-size:.93rem}
+.tag{font-size:.68rem;color:#35507a;border:1px solid #d5e4fb;padding:4px 8px;border-radius:999px;background:#f4f8ff;font-weight:700}
+.hero-chip{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.mini-hero{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:#f3f7ff;border:1px solid #d7e5fb;font-size:1.2rem}
+.tool-card{display:flex;flex-direction:column;align-items:flex-start}
+.tool-card .btn{margin-top:auto}
+.tool-panel{margin-top:22px;padding:24px;border-radius:22px;background:#fff;border:1px solid #d7e3f7;box-shadow:var(--shadow);position:relative}
+.tool-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;position:relative;gap:12px}
+.tool-head h3{font-size:1.35rem;margin:4px 0 0}
+.close-tool{border:1px solid #d7e3f7;background:#f4f8ff;color:#13203a;border-radius:10px;width:38px;height:38px;font-size:1.4rem;cursor:pointer;flex-shrink:0}
+.tool-view[hidden],.tool-panel[hidden]{display:none}
+.calculator{max-width:420px}
+.display{width:100%;padding:16px 18px;border:1px solid #cfe0f8;border-radius:14px;background:#f3f8ff;color:#0b1b3a;text-align:right;font-size:1.8rem;margin-bottom:12px}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.calc-grid button{padding:15px;border:1px solid #d7e3f7;border-radius:12px;background:#fff;color:#13203a;font-size:1rem;cursor:pointer}
+.calc-grid button:hover{border-color:#8cbcff;background:#eef5ff}
+.calc-grid .wide{grid-column:span 2}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:16px}
+.form-grid label,.field{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:.86rem;font-weight:600}
+.form-grid input,.form-grid select,input[type=range]{padding:12px;border:1px solid #d0def3;border-radius:12px;background:#fff;color:#13203a;outline:none;font:inherit}
+.form-grid input:focus,.form-grid select:focus{border-color:#1678ff;box-shadow:0 0 0 3px rgba(22,120,255,.12)}
+.results{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.result{padding:14px 16px;border:1px solid #d7e3f7;border-radius:14px;background:#f7faff}
+.result.good{border-color:#b7ebc8;background:#f1fff6}
+.result.warn{border-color:#ffd0d0;background:#fff6f6}
+.result strong{display:block;font-size:1.12rem;color:#0b1b3a}
+.result span{color:var(--muted);font-size:.76rem}
+.drop{border:1.5px dashed #9fc0f0;border-radius:16px;padding:26px 16px;text-align:center;background:#f5f9ff;cursor:pointer;transition:.2s;position:relative}
+.drop:hover,.drop.hot{border-color:#1678ff;background:#ebf3ff}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop b{display:block;color:#0b1b3a;margin-bottom:4px}
+.drop small{color:var(--muted)}
+.file-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:#fff;border:1px solid #d7e3f7;font-size:.8rem}
+.chip button{border:0;background:transparent;color:#d3124a;cursor:pointer;font-size:1rem}
+.status{margin:10px 0 0;color:var(--muted);font-size:.88rem;min-height:1.3em}
+.tool-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.hint{color:var(--muted);font-size:.82rem;margin-top:8px}
+.table-wrap{overflow:auto;max-height:380px;margin-top:12px;border-radius:14px;border:1px solid #d7e3f7;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #edf2fb;white-space:nowrap}
+th{position:sticky;top:0;background:#f3f7ff;color:#35507a;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
+td.desc{white-space:normal;min-width:180px;color:#35507a}
+.cr{color:#0f8a4b;font-weight:700}.dr{color:#d3124a;font-weight:700}
+.month-bars{display:grid;gap:8px;margin-top:12px}
+.bar-row{display:grid;grid-template-columns:88px 1fr minmax(120px,auto);gap:10px;align-items:center;font-size:.8rem;color:var(--muted)}
+.bar{height:9px;border-radius:99px;background:#e6eefb;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#1678ff,#00b3c6);border-radius:99px}
+.privacy{margin-top:14px;font-size:.78rem;color:var(--muted)}
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+.block-title{margin:22px 0 8px;font-size:1.02rem}
+.rank{color:#5b6b88;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;margin-top:4px;padding:2px 8px;border-radius:999px;font-size:.68rem;border:1px solid #d7e3f7;color:#35507a;background:#f4f8ff}
+.squad{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:22px}
+.squad-card{text-align:center;padding:18px 12px;border-radius:18px;background:#fff;border:1px solid #dbe7fa;position:relative;overflow:hidden;min-height:196px;box-shadow:var(--shadow)}
+.squad-card:hover{transform:translateY(-5px);transition:.22s}
+.squad-glow{position:absolute;inset:auto 12% -40% 12%;height:90px;filter:blur(18px);opacity:.35}
+.avatar{width:74px;height:74px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:#f4f8ff;box-shadow:0 0 0 2px #e4edfb}
+.avatar svg{width:42px;height:42px}
+.squad-card h4{margin:0 0 4px;font-size:.95rem}
+.squad-card p{margin:0;color:var(--muted);font-size:.75rem}
+.cta{padding:42px;border-radius:24px;text-align:center;background:#fff;border:1px solid #d7e3f7;box-shadow:var(--shadow)}
+.cta h2{font-size:clamp(1.7rem,4vw,2.5rem);margin:0 0 10px}
+.cta p{color:var(--muted);max-width:640px;margin:0 auto}
+footer{padding:28px 0 40px;color:var(--muted);display:flex;justify-content:space-between;gap:20px;border-top:1px solid #d7e3f7;font-size:.85rem}
+#installBtn{cursor:pointer;font:inherit}
+#installBtn[hidden]{display:none}
+.install-note{margin-top:16px;color:var(--muted);font-size:.84rem}
+.rgb-frame{display:none}
+@media(max-width:980px){
+  .hero{grid-template-columns:1fr;padding-top:28px}
+  .hero-art{min-height:180px}
+  .section-head,.analysis-grid,.grid,.squad{grid-template-columns:1fr}
+  .squad{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  nav .links{display:none}
+  .cta{padding:26px 18px}
+  footer{display:block}
+  footer div+div{margin-top:8px}
+  .form-grid{grid-template-columns:1fr}
+  .bar-row{grid-template-columns:1fr;gap:4px}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+<nav class="wrap">
+  <a class="logo" href="#" aria-label="NT280793 home">
+    <span class="logo-mark"><b>NT</b></span>
+    <span class="logo-text">280793</span>
+  </a>
+  <div class="links">
+    <a href="#tools">Tools</a>
+    <a href="reel.html">3D Reel</a>
+    <a href="#pdf-studio">PDF Studio</a>
+    <a href="#bank-lab">Bank Lab</a>
+    <a href="#squad">Squad</a>
+    <a href="#contact">Suggest</a>
+  </div>
+  <div class="nav-actions">
+    <button class="btn" id="installBtn" hidden>Install App ↗</button>
+    <a class="btn primary" href="#tools">Explore →</a>
+  </div>
+</nav>
+</div>
+
+<main>
+<section class="hero">
+  <div class="orb"></div>
+  <div class="hero-art" aria-hidden="true">
+    <svg class="iron" viewBox="0 0 200 240" fill="currentColor"><path d="M100 18c18 8 34 14 42 28 6 10 8 26 6 42-2 18-4 28 4 40 6 10 10 22 8 34-14 8-28 14-60 14s-46-6-60-14c-2-12 2-24 8-34 8-12 6-22 4-40-2-16 0-32 6-42 8-14 24-20 42-28z"/><rect x="70" y="96" width="60" height="14" rx="7" fill="#05010d"/></svg>
+    <svg class="cap" viewBox="0 0 220 220" fill="none" stroke="currentColor" stroke-width="10"><circle cx="110" cy="110" r="86"/><circle cx="110" cy="110" r="58"/><path d="M110 62l12 36h38l-30 22 12 36-32-22-32 22 12-36-30-22h38z" fill="currentColor" stroke="none"/></svg>
+    <svg class="spy" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="6"><path d="M20 40c40 8 70-20 140 8M18 90c50-30 90 20 146-8M30 140c46-18 80 10 120-20"/><circle cx="90" cy="88" r="22" fill="currentColor"/></svg>
+    <svg class="hammer" viewBox="0 0 160 180" fill="currentColor"><rect x="62" y="70" width="18" height="96" rx="6"/><rect x="28" y="28" width="86" height="48" rx="8"/></svg>
+  </div>
+  <div class="wrap">
+    <span class="badge">Light HQ • PDF Studio • Bank Lab</span>
+    <h1>Tools that<br><em>move work forward.</em></h1>
+    <p>Calculators, PDF compress / merge / image convert, and bank-statement analysis — all in the browser. Files never leave this device.</p>
+    <div class="actions">
+      <a class="btn primary" href="#pdf-studio">PDF Studio ✦</a>
+      <a class="btn" href="#bank-lab">Bank Analysis</a>
+      <a class="btn" href="reel.html">3D Reel</a>
+    </div>
+  </div>
+</section>
+
+<section id="reel">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Picture</div>
+        <h2 class="section-title">The trick, explained</h2>
+      </div>
+      <p class="sub">A vertical 3D reel of the Roadster flip — ramp, suction fans, carbon-fibre tanks, and cold-gas nozzles. Drag the car to orbit it.</p>
+    </div>
+    <div class="actions" style="margin-top:18px">
+      <a class="btn primary" href="reel.html">Play the 3D reel →</a>
+      <a class="btn" href="media/the-trick-explained.mp4" download>Download video</a>
+    </div>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">01 — Everyday</div>
+        <h2 class="section-title">Quick tools</h2>
+      </div>
+      <p class="sub">Calculator, EMI and unit converter in one row. Open a tool without leaving the page.</p>
+    </div>
+    <div class="grid">
+      <article class="card tool-card iron">
+        <div class="hero-chip"><div class="mini-hero">⌘</div><span class="tag">Arc Reactor Lab</span></div>
+        <h3>Smart Calculator</h3>
+        <p>Everyday calculations in a gold-red neon console.</p>
+        <button class="btn primary open-tool" data-panel="toolPanel" data-tool="calculator">Launch Tool →</button>
+      </article>
+      <article class="card tool-card cap">
+        <div class="hero-chip"><div class="mini-hero">₹</div><span class="tag">Star Shield Desk</span></div>
+        <h3>EMI Calculator</h3>
+        <p>Monthly EMI, total interest, and total repayment.</p>
+        <button class="btn primary open-tool" data-panel="toolPanel" data-tool="emi">Launch Tool →</button>
+      </article>
+      <article class="card tool-card spy">
+        <div class="hero-chip"><div class="mini-hero">⇄</div><span class="tag">Web-Line Lab</span></div>
+        <h3>Unit Converter</h3>
+        <p>Length, weight, and temperature in one tap.</p>
+        <button class="btn primary open-tool" data-panel="toolPanel" data-tool="converter">Launch Tool →</button>
+      </article>
+    </div>
+    <div class="tool-panel" id="toolPanel" hidden>
+      <div class="tool-head"><div><div class="eyebrow">NT280793 APP</div><h3 id="toolTitle">Tool</h3></div><button class="close-tool" data-close="toolPanel">×</button></div>
+      <div id="calculator" class="tool-view" hidden>
+        <div class="calculator">
+          <input id="calcDisplay" class="display" value="0" readonly aria-label="Calculator display">
+          <div class="calc-grid">
+            <button data-calc="C">C</button><button data-calc="back">⌫</button><button data-calc="%">%</button><button data-calc="/">÷</button>
+            <button data-calc="7">7</button><button data-calc="8">8</button><button data-calc="9">9</button><button data-calc="*">×</button>
+            <button data-calc="4">4</button><button data-calc="5">5</button><button data-calc="6">6</button><button data-calc="-">−</button>
+            <button data-calc="1">1</button><button data-calc="2">2</button><button data-calc="3">3</button><button data-calc="+">+</button>
+            <button data-calc="0" class="wide">0</button><button data-calc=".">.</button><button data-calc="=">=</button>
+          </div>
+        </div>
+      </div>
+      <div id="emi" class="tool-view" hidden>
+        <div class="form-grid">
+          <label>Loan amount (₹)<input id="loan" type="number" value="500000" min="0"></label>
+          <label>Annual interest (%)<input id="rate" type="number" value="10" min="0" step=".01"></label>
+          <label>Tenure (years)<input id="years" type="number" value="5" min="1" step="1"></label>
+        </div>
+        <button class="btn primary" id="calcEmi">Calculate EMI →</button>
+        <div class="results" id="emiResult"></div>
+      </div>
+      <div id="converter" class="tool-view" hidden>
+        <div class="form-grid">
+          <label>Category<select id="category"><option value="length">Length</option><option value="weight">Weight</option><option value="temp">Temperature</option></select></label>
+          <label>From<select id="fromUnit"></select></label>
+          <label>To<select id="toUnit"></select></label>
+          <label>Value<input id="convertValue" type="number" value="1" step="any"></label>
+        </div>
+        <button class="btn primary" id="convertBtn">Convert →</button>
+        <div class="results" id="convertResult"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pdf-studio">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">02 — Documents</div>
+        <h2 class="section-title">PDF Studio</h2>
+      </div>
+      <p class="sub">Compress, convert images to PDF, and merge files on this device. Nothing is uploaded.</p>
+    </div>
+    <div class="grid">
+      <article class="card tool-card pdf">
+        <div class="hero-chip"><div class="mini-hero">▣</div><span class="tag">Shrink Protocol</span></div>
+        <h3>PDF Compressor</h3>
+        <p>Rebuild pages as compressed images. Best for scanned or photo-heavy PDFs.</p>
+        <button class="btn primary open-tool" data-panel="pdfPanel" data-tool="compress">Open Compressor →</button>
+      </article>
+      <article class="card tool-card imgpdf">
+        <div class="hero-chip"><div class="mini-hero">⧉</div><span class="tag">Frame Binder</span></div>
+        <h3>Images to PDF</h3>
+        <p>Drop JPG / PNG / WEBP photos and export one clean PDF.</p>
+        <button class="btn primary open-tool" data-panel="pdfPanel" data-tool="imgtopdf">Open Converter →</button>
+      </article>
+      <article class="card tool-card merge">
+        <div class="hero-chip"><div class="mini-hero">☰</div><span class="tag">Stack Hammer</span></div>
+        <h3>PDF Merger</h3>
+        <p>Combine multiple PDFs in order into a single file.</p>
+        <button class="btn primary open-tool" data-panel="pdfPanel" data-tool="merger">Open Merger →</button>
+      </article>
+    </div>
+
+    <div class="tool-panel" id="pdfPanel" hidden>
+      <div class="tool-head"><div><div class="eyebrow">PDF STUDIO</div><h3 id="pdfTitle">Tool</h3></div><button class="close-tool" data-close="pdfPanel">×</button></div>
+
+      <div id="compress" class="tool-view" hidden>
+        <label class="drop" id="compressDrop">
+          <input type="file" id="compressFile" accept="application/pdf">
+          <b>Drop a PDF or click to choose</b>
+          <small>Processed on this device. Quality slider controls size vs clarity.</small>
+        </label>
+        <div class="file-list" id="compressChip"></div>
+        <div class="form-grid" style="margin-top:16px">
+          <label>Quality <span id="qLabel">65%</span>
+            <input id="compressQuality" type="range" min="35" max="92" value="65">
+          </label>
+          <label>Scale
+            <select id="compressScale">
+              <option value="0.7">Small (70%)</option>
+              <option value="0.85" selected>Balanced (85%)</option>
+              <option value="1">Sharp (100%)</option>
+            </select>
+          </label>
+        </div>
+        <div class="tool-actions">
+          <button class="btn primary" id="compressBtn">Compress & Download →</button>
+        </div>
+        <p class="status" id="compressStatus"></p>
+        <p class="hint">Text-only digital PDFs may not shrink much. Scans and image PDFs shrink the most.</p>
+      </div>
+
+      <div id="imgtopdf" class="tool-view" hidden>
+        <label class="drop" id="imgDrop">
+          <input type="file" id="imgFiles" accept="image/*" multiple>
+          <b>Drop images or click to choose</b>
+          <small>Order follows the file list. First image becomes page 1.</small>
+        </label>
+        <div class="file-list" id="imgChips"></div>
+        <div class="form-grid" style="margin-top:16px">
+          <label>Page size
+            <select id="imgPage">
+              <option value="fit" selected>Fit each image</option>
+              <option value="a4">Force A4</option>
+            </select>
+          </label>
+          <label>Margin (pt)<input id="imgMargin" type="number" value="18" min="0" max="72"></label>
+        </div>
+        <div class="tool-actions">
+          <button class="btn primary" id="imgPdfBtn">Build PDF →</button>
+        </div>
+        <p class="status" id="imgStatus"></p>
+      </div>
+
+      <div id="merger" class="tool-view" hidden>
+        <label class="drop" id="mergeDrop">
+          <input type="file" id="mergeFiles" accept="application/pdf" multiple>
+          <b>Drop PDFs or click to choose</b>
+          <small>Files merge top to bottom in the list order.</small>
+        </label>
+        <div class="file-list" id="mergeChips"></div>
+        <div class="tool-actions">
+          <button class="btn primary" id="mergeBtn">Merge & Download →</button>
+        </div>
+        <p class="status" id="mergeStatus"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bank-lab">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">03 — Credit desk</div>
+        <h2 class="section-title">Bank statement analysis</h2>
+      </div>
+      <p class="sub">Latest 1 year: top 10 credits, top 10 debits, and regular in/out patterns with date and narration.</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr;max-width:100%">
+      <article class="card bank">
+        <div class="hero-chip"><div class="mini-hero">₹</div><span class="tag">Ledger Watch</span></div>
+        <h3>Statement analyser</h3>
+        <p>Works best with text-based Indian bank PDFs or exported CSV (Date, Narration, Debit, Credit, Balance).</p>
+        <button class="btn primary open-tool" data-panel="bankPanel" data-tool="bank">Open Bank Lab →</button>
+      </article>
+    </div>
+
+    <div class="tool-panel" id="bankPanel" hidden>
+      <div class="tool-head"><div><div class="eyebrow">BANK LAB</div><h3>Statement analysis</h3></div><button class="close-tool" data-close="bankPanel">×</button></div>
+      <div id="bank" class="tool-view">
+        <label class="drop" id="bankDrop">
+          <input type="file" id="bankFile" accept=".pdf,.csv,.txt,application/pdf,text/csv,text/plain">
+          <b>Drop statement PDF / CSV or click to choose</b>
+          <small>Private by design — parsing stays in your browser.</small>
+        </label>
+        <div class="file-list" id="bankChip"></div>
+        <div class="tool-actions">
+          <button class="btn primary" id="bankBtn">Analyse statement →</button>
+        </div>
+        <p class="status" id="bankStatus"></p>
+        <div id="bankOut"></div>
+        <p class="privacy">Heuristic parser. Scanned image-only PDFs need OCR and will extract little text. Always re-check figures before a credit decision.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="squad">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">04 — Detail</div>
+        <h2 class="section-title">Hero squad</h2>
+      </div>
+      <p class="sub">Original light-studio silhouettes. Marvel-inspired energy, not official art.</p>
+    </div>
+    <div class="squad">
+      <article class="squad-card" style="color:var(--iron)"><div class="squad-glow" style="background:var(--iron)"></div><div class="avatar"><svg viewBox="0 0 64 64" fill="currentColor"><path d="M32 6c8 4 16 6 20 14 4 8 3 16 2 22-6 4-12 8-22 8s-16-4-22-8c-1-6-2-14 2-22C16 12 24 10 32 6z"/></svg></div><h4>Gold Armor</h4><p>Calculator + PDF forge</p></article>
+      <article class="squad-card" style="color:var(--cap)"><div class="squad-glow" style="background:var(--cap)"></div><div class="avatar"><svg viewBox="0 0 64 64" fill="currentColor"><path d="M32 8l6 18h19l-15 11 6 18-16-12-16 12 6-18-15-11h19z"/></svg></div><h4>Star Shield</h4><p>EMI + bank lab</p></article>
+      <article class="squad-card" style="color:var(--spy)"><div class="squad-glow" style="background:var(--spy)"></div><div class="avatar"><svg viewBox="0 0 64 64" fill="currentColor"><circle cx="32" cy="32" r="10"/></svg></div><h4>Web Runner</h4><p>Converter + merge</p></article>
+      <article class="squad-card" style="color:var(--thor)"><div class="squad-glow" style="background:var(--thor)"></div><div class="avatar"><svg viewBox="0 0 64 64" fill="currentColor"><rect x="28" y="28" width="8" height="30" rx="3"/><rect x="16" y="12" width="32" height="18" rx="4"/></svg></div><h4>Storm Hammer</h4><p>Compress lightning</p></article>
+      <article class="squad-card" style="color:var(--panther)"><div class="squad-glow" style="background:var(--panther)"></div><div class="avatar"><svg viewBox="0 0 64 64" fill="currentColor"><path d="M12 40c6-16 12-28 20-28s14 12 20 28c-6 10-14 16-20 16s-14-6-20-16z"/></svg></div><h4>Violet King</h4><p>Night-mode guardian</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="cta">
+      <div class="eyebrow">Why this exists</div>
+      <h2>Small ideas. Neon impact.</h2>
+      <p>NT280793 keeps practical tools in one local HQ — calculators for the day, a PDF studio for files, and a bank lab for credit-style statement reads.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="eyebrow">Community</div>
+    <h2 class="section-title">Have an idea?</h2>
+    <p class="sub">Tell me what would make an everyday task easier.</p>
+    <div style="margin-top:25px"><a class="btn primary" href="mailto:YOUR-EMAIL@example.com?subject=Tool%20Suggestion">Send a suggestion →</a></div>
+    <p class="install-note">PDF + bank tools run offline in the browser after libraries load. No statement is uploaded.</p>
+  </div>
+</section>
+</main>
+<footer class="wrap"><div>© 2026 NT280793</div><div>Useful technology. Neon hero edition.</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const { PDFDocument, rgb } = PDFLib;
+if (window.pdfjsLib) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
+
+const titles = {
+  calculator:"Smart Calculator", emi:"EMI Calculator", converter:"Unit Converter",
+  compress:"PDF Compressor", imgtopdf:"Images to PDF", merger:"PDF Merger", bank:"Bank Statement Lab"
+};
+
+document.querySelectorAll(".open-tool").forEach(btn => btn.addEventListener("click", () => {
+  const panel = document.getElementById(btn.dataset.panel);
+  const name = btn.dataset.tool;
+  document.querySelectorAll(".tool-panel").forEach(p => p.hidden = true);
+  panel.hidden = false;
+  panel.querySelectorAll(".tool-view").forEach(v => v.hidden = true);
+  const view = document.getElementById(name);
+  if (view) view.hidden = false;
+  const title = panel.querySelector("h3");
+  if (title && titles[name]) title.textContent = titles[name];
+  panel.scrollIntoView({behavior:"smooth", block:"center"});
+}));
+document.querySelectorAll("[data-close]").forEach(btn => btn.onclick = () => {
+  document.getElementById(btn.dataset.close).hidden = true;
+});
+
+/* Calculator */
+let expr = "";
+const display = document.getElementById("calcDisplay");
+document.querySelectorAll("[data-calc]").forEach(b => b.onclick = () => {
+  const x = b.dataset.calc;
+  if (x === "C") { expr = ""; display.value = "0"; return; }
+  if (x === "back") { expr = expr.slice(0,-1); display.value = expr || "0"; return; }
+  if (x === "=") {
+    try { expr = String(Function('"use strict";return (' + expr + ")")()); display.value = expr; }
+    catch { display.value = "Error"; expr = ""; }
+    return;
+  }
+  if (x === "%") expr = expr.replace(/(\d+\.?\d*)$/, "($1/100)");
+  else expr += x;
+  display.value = expr;
+});
+
+document.getElementById("calcEmi").onclick = () => {
+  const P = +document.getElementById("loan").value || 0;
+  const r = (+document.getElementById("rate").value || 0) / 1200;
+  const n = (+document.getElementById("years").value || 0) * 12;
+  const emi = r === 0 ? P / n : P * r * Math.pow(1+r,n) / (Math.pow(1+r,n) - 1);
+  const total = emi * n, interest = total - P;
+  document.getElementById("emiResult").innerHTML =
+    `<div class="result"><span>Monthly EMI</span><strong>₹${fmt(emi)}</strong></div>
+     <div class="result"><span>Total interest</span><strong>₹${fmt(interest)}</strong></div>
+     <div class="result"><span>Total repayment</span><strong>₹${fmt(total)}</strong></div>`;
+};
+
+const units = { length:{m:1,km:1000,cm:.01,mm:.001,ft:.3048,in:.0254}, weight:{kg:1,g:.001,lb:.45359237,oz:.0283495231}, temp:{C:"C",F:"F",K:"K"} };
+function fillUnits(){
+  const cat = document.getElementById("category").value, u = Object.keys(units[cat]);
+  ["fromUnit","toUnit"].forEach(id => document.getElementById(id).innerHTML = u.map(x => `<option value="${x}">${x}</option>`).join(""));
+  document.getElementById("toUnit").value = u[1] || u[0];
+}
+document.getElementById("category").onchange = fillUnits;
+document.getElementById("convertBtn").onclick = () => {
+  const cat = document.getElementById("category").value, v = +document.getElementById("convertValue").value || 0;
+  const a = document.getElementById("fromUnit").value, b = document.getElementById("toUnit").value;
+  let out;
+  if (cat === "temp") {
+    const c = a === "C" ? v : a === "F" ? (v-32)*5/9 : v-273.15;
+    out = b === "C" ? c : b === "F" ? c*9/5+32 : c+273.15;
+  } else out = v * units[cat][a] / units[cat][b];
+  document.getElementById("convertResult").innerHTML = `<div class="result"><span>Converted value</span><strong>${out.toLocaleString("en-IN",{maximumFractionDigits:6})} ${b}</strong></div>`;
+};
+fillUnits();
+
+function fmt(n){ return (Number(n)||0).toLocaleString("en-IN",{maximumFractionDigits:2}); }
+function inr(n){ return "₹" + fmt(n); }
+function downloadBlob(bytes, name, type){
+  const blob = new Blob([bytes], {type});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+}
+function wireDrop(box){
+  ["dragenter","dragover"].forEach(ev => box.addEventListener(ev, e => { e.preventDefault(); box.classList.add("hot"); }));
+  ["dragleave","drop"].forEach(ev => box.addEventListener(ev, e => { e.preventDefault(); box.classList.remove("hot"); }));
+}
+function chips(el, files, onRemove){
+  el.innerHTML = "";
+  [...files].forEach((f,i) => {
+    const s = document.createElement("span");
+    s.className = "chip";
+    s.innerHTML = `${f.name} <small>(${(f.size/1024).toFixed(0)} KB)</small>`;
+    if (onRemove) {
+      const b = document.createElement("button");
+      b.textContent = "×"; b.onclick = () => onRemove(i);
+      s.appendChild(b);
+    }
+    el.appendChild(s);
+  });
+}
+
+/* PDF compressor */
+const compressFileInput = document.getElementById("compressFile");
+const compressQuality = document.getElementById("compressQuality");
+compressQuality.oninput = () => document.getElementById("qLabel").textContent = compressQuality.value + "%";
+wireDrop(document.getElementById("compressDrop"));
+compressFileInput.onchange = () => chips(document.getElementById("compressChip"), compressFileInput.files);
+document.getElementById("compressBtn").onclick = async () => {
+  const file = compressFileInput.files[0];
+  const status = document.getElementById("compressStatus");
+  if (!file) { status.textContent = "Choose a PDF first."; return; }
+  if (!window.pdfjsLib) { status.textContent = "PDF engine still loading. Wait a second."; return; }
+  try {
+    status.textContent = "Reading pages…";
+    const data = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data: data.slice(0)}).promise;
+    const out = await PDFDocument.create();
+    const quality = (+compressQuality.value)/100;
+    const scale = +document.getElementById("compressScale").value;
+    for (let i=1;i<=pdf.numPages;i++){
+      status.textContent = `Compressing page ${i} / ${pdf.numPages}…`;
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({scale});
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = Math.max(1, Math.floor(viewport.width));
+      canvas.height = Math.max(1, Math.floor(viewport.height));
+      await page.render({canvasContext:ctx, viewport}).promise;
+      const jpeg = canvas.toDataURL("image/jpeg", quality);
+      const img = await out.embedJpg(await (await fetch(jpeg)).arrayBuffer());
+      const p = out.addPage([img.width, img.height]);
+      p.drawImage(img, {x:0,y:0,width:img.width,height:img.height});
+    }
+    const bytes = await out.save({useObjectStreams:true});
+    downloadBlob(bytes, file.name.replace(/\.pdf$/i,"") + "-compressed.pdf", "application/pdf");
+    status.textContent = `Done. ${file.size} bytes → ${bytes.length} bytes (${Math.round(bytes.length/file.size*100)}%).`;
+  } catch (err) {
+    console.error(err);
+    status.textContent = "Could not compress this file. Try another PDF.";
+  }
+};
+
+/* Images to PDF */
+let imgList = [];
+const imgInput = document.getElementById("imgFiles");
+wireDrop(document.getElementById("imgDrop"));
+function refreshImgChips(){ chips(document.getElementById("imgChips"), imgList, i => { imgList.splice(i,1); refreshImgChips(); }); }
+imgInput.onchange = () => { imgList = [...imgList, ...imgInput.files]; imgInput.value = ""; refreshImgChips(); };
+document.getElementById("imgPdfBtn").onclick = async () => {
+  const status = document.getElementById("imgStatus");
+  if (!imgList.length) { status.textContent = "Add at least one image."; return; }
+  try {
+    status.textContent = "Building PDF…";
+    const doc = await PDFDocument.create();
+    const mode = document.getElementById("imgPage").value;
+    const margin = +document.getElementById("imgMargin").value || 0;
+    for (const file of imgList) {
+      const buf = await file.arrayBuffer();
+      const type = (file.type || "").toLowerCase();
+      const img = type.includes("png") ? await doc.embedPng(buf) : await doc.embedJpg(await maybeToJpg(file, buf));
+      let pw, ph;
+      if (mode === "a4") { pw = 595.28; ph = 841.89; }
+      else { pw = img.width + margin*2; ph = img.height + margin*2; }
+      const page = doc.addPage([pw, ph]);
+      const maxW = pw - margin*2, maxH = ph - margin*2;
+      const scale = Math.min(maxW / img.width, maxH / img.height);
+      const w = img.width * scale, h = img.height * scale;
+      page.drawImage(img, {x:(pw-w)/2, y:(ph-h)/2, width:w, height:h});
+    }
+    const bytes = await doc.save();
+    downloadBlob(bytes, "images.pdf", "application/pdf");
+    status.textContent = `Created ${imgList.length}-page PDF (${Math.round(bytes.length/1024)} KB).`;
+  } catch (err) {
+    console.error(err);
+    status.textContent = "Could not build PDF. Use JPG or PNG if WEBP fails.";
+  }
+};
+async function maybeToJpg(file, buf){
+  const t = (file.type||"").toLowerCase();
+  if (t.includes("jpeg") || t.includes("jpg")) return buf;
+  const url = URL.createObjectURL(file);
+  const im = await new Promise((res,rej) => { const i = new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+  const c = document.createElement("canvas"); c.width = im.width; c.height = im.height;
+  c.getContext("2d").drawImage(im,0,0);
+  URL.revokeObjectURL(url);
+  const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.92));
+  return await blob.arrayBuffer();
+}
+
+/* Merger */
+let mergeList = [];
+const mergeInput = document.getElementById("mergeFiles");
+wireDrop(document.getElementById("mergeDrop"));
+function refreshMerge(){ chips(document.getElementById("mergeChips"), mergeList, i => { mergeList.splice(i,1); refreshMerge(); }); }
+mergeInput.onchange = () => { mergeList = [...mergeList, ...mergeInput.files]; mergeInput.value = ""; refreshMerge(); };
+document.getElementById("mergeBtn").onclick = async () => {
+  const status = document.getElementById("mergeStatus");
+  if (mergeList.length < 2) { status.textContent = "Add at least two PDFs."; return; }
+  try {
+    status.textContent = "Merging…";
+    const out = await PDFDocument.create();
+    let n = 0;
+    for (const file of mergeList) {
+      const src = await PDFDocument.load(await file.arrayBuffer(), {ignoreEncryption:true});
+      const pages = await out.copyPages(src, src.getPageIndices());
+      pages.forEach(p => out.addPage(p));
+      n += pages.length;
+    }
+    const bytes = await out.save();
+    downloadBlob(bytes, "merged.pdf", "application/pdf");
+    status.textContent = `Merged ${mergeList.length} files / ${n} pages.`;
+  } catch (err) {
+    console.error(err);
+    status.textContent = "Merge failed. One file may be locked or damaged.";
+  }
+};
+
+/* Bank lab */
+const bankInput = document.getElementById("bankFile");
+wireDrop(document.getElementById("bankDrop"));
+bankInput.onchange = () => chips(document.getElementById("bankChip"), bankInput.files);
+document.getElementById("bankBtn").onclick = async () => {
+  const file = bankInput.files[0];
+  const status = document.getElementById("bankStatus");
+  const out = document.getElementById("bankOut");
+  out.innerHTML = "";
+  if (!file) { status.textContent = "Choose a statement first."; return; }
+  try {
+    status.textContent = "Reading statement…";
+    let text = "";
+    const name = file.name.toLowerCase();
+    if (name.endsWith(".csv") || name.endsWith(".txt") || file.type.includes("csv") || file.type.includes("text")) {
+      text = await file.text();
+    } else {
+      if (!window.pdfjsLib) { status.textContent = "PDF engine still loading."; return; }
+      const pdf = await pdfjsLib.getDocument({data: await file.arrayBuffer()}).promise;
+      for (let i=1;i<=pdf.numPages;i++){
+        status.textContent = `Extracting page ${i} / ${pdf.numPages}…`;
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map(it => it.str).join(" ") + "\n";
+      }
+    }
+    const txns = parseStatement(text).map(t => ({...t, dt: parseTxnDate(t.date)}));
+    if (!txns.length) {
+      status.textContent = "No transactions detected. Try CSV export, or a text-based PDF.";
+      out.innerHTML = `<p class="hint">Extracted text preview:</p><div class="table-wrap"><td style="padding:12px;white-space:pre-wrap;color:#c9b8e0">${esc(text.slice(0,1800)) || "(empty — likely a scanned PDF)"}</td></div>`;
+      return;
+    }
+    const report = renderBank(txns);
+    status.textContent = report;
+  } catch (err) {
+    console.error(err);
+    status.textContent = "Could not read this statement.";
+  }
+};
+
+function esc(s){ return String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function parseAmount(s){
+  if (s == null) return 0;
+  const n = String(s).replace(/[₹Rs\s]/gi,"").replace(/,/g,"");
+  const v = parseFloat(n);
+  return Number.isFinite(v) ? v : 0;
+}
+function parseStatement(raw){
+  const text = raw.replace(/\u00a0/g," ");
+  if (looksLikeCSV(text)) return parseCSV(text);
+  return parsePDFText(text);
+}
+function looksLikeCSV(t){
+  const first = t.split(/\r?\n/).find(l => l.trim());
+  if (!first) return false;
+  return (first.match(/,/g)||[]).length >= 2 && /date|narration|desc|debit|credit|amount|balance/i.test(first);
+}
+function parseCSV(text){
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (!lines.length) return [];
+  const split = line => {
+    const out=[]; let cur="", q=false;
+    for (const ch of line){
+      if (ch === '"') q = !q;
+      else if (ch === "," && !q) { out.push(cur.trim()); cur=""; }
+      else cur += ch;
+    }
+    out.push(cur.trim());
+    return out;
+  };
+  const headers = split(lines[0]).map(h => h.toLowerCase());
+  const idx = key => headers.findIndex(h => key.test(h));
+  const iDate = idx(/date/);
+  const iDesc = idx(/narrat|desc|particular|remarks|details/);
+  const iDebit = idx(/debit|withdrawal|dr\b/);
+  const iCredit = idx(/credit|deposit|cr\b/);
+  const iAmt = idx(/^amount$|txn amount|transaction amount/);
+  const iType = idx(/type|dr\/cr|crdr/);
+  const iBal = idx(/balance|bal\b/);
+  const rows = [];
+  for (let i=1;i<lines.length;i++){
+    const c = split(lines[i]);
+    if (c.every(x => !x)) continue;
+    const date = iDate>=0 ? c[iDate] : "";
+    const desc = iDesc>=0 ? c[iDesc] : c.filter((_,k)=>k!==iDate).join(" ");
+    let credit=0, debit=0;
+    if (iDebit>=0 || iCredit>=0) {
+      debit = parseAmount(c[iDebit]); credit = parseAmount(c[iCredit]);
+    } else if (iAmt>=0) {
+      const amt = parseAmount(c[iAmt]);
+      const typ = (iType>=0 ? c[iType] : desc).toLowerCase();
+      if (/cr|credit|deposit/.test(typ) && !/debit/.test(typ)) credit = amt;
+      else debit = amt;
+    } else continue;
+    if (!credit && !debit) continue;
+    rows.push({date, desc: desc || "—", credit, debit, balance: iBal>=0 ? parseAmount(c[iBal]) : null, raw: lines[i]});
+  }
+  return rows;
+}
+function parsePDFText(text){
+  const dateRe = /(\d{1,2}[\/\-][A-Za-z]{3}[\/\-]\d{2,4}|\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\d{1,2}\s+[A-Za-z]{3}\s+\d{2,4})/;
+  const amtRe = /(?:₹|Rs\.?)?\s*\d{1,3}(?:,\d{2})*(?:,\d{3})*(?:\.\d{1,2})?|\d+\.\d{2}/g;
+  const lines = text.split(/\r?\n/).map(l => l.replace(/\s+/g," ").trim()).filter(Boolean);
+  const packed = [];
+  for (const line of lines) {
+    if (dateRe.test(line)) packed.push(line);
+    else if (packed.length && amtRe.test(line) && line.length < 80) packed[packed.length-1] += " " + line;
+  }
+  const source = packed.length ? packed : text.replace(/\s+/g," ").split(/(?=\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/);
+  const rows = [];
+  for (const line of source) {
+    const dm = line.match(dateRe);
+    if (!dm) continue;
+    const amounts = (line.match(amtRe) || []).map(parseAmount).filter(n => n > 0);
+    if (!amounts.length) continue;
+    const desc = line.replace(dateRe,"").replace(amtRe,"").replace(/\b(DR|CR|Dr|Cr)\b/g,"").trim() || "Transaction";
+    const low = line.toLowerCase();
+    let credit=0, debit=0;
+    const hasCR = /\bcr\b|credit|deposit|salary|neft in|imps in|upi.*from|refund/.test(low);
+    const hasDR = /\bdr\b|debit|withdrawal|withdraw|atm|pos |emi|charge|fee|neft out|imps out/.test(low);
+    if (amounts.length >= 2) {
+      const txn = amounts[amounts.length-2];
+      const last = amounts[amounts.length-1];
+      if (hasCR && !hasDR) credit = txn;
+      else if (hasDR && !hasCR) debit = txn;
+      else {
+        debit = txn; /* default spend if unknown, balance kept separately */
+        if (hasCR) { credit = txn; debit = 0; }
+      }
+      rows.push({date: dm[1], desc, credit, debit, balance: last, raw: line});
+    } else {
+      if (hasCR && !hasDR) credit = amounts[0];
+      else debit = amounts[0];
+      rows.push({date: dm[1], desc, credit, debit, balance: null, raw: line});
+    }
+  }
+  return rows;
+}
+
+function parseTxnDate(s){
+  if (!s) return null;
+  const str = String(s).trim();
+  const months = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  let m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if (m) {
+    let d = +m[1], mo = +m[2]-1, y = +m[3];
+    if (y < 100) y += 2000;
+    if (mo > 11 && d <= 12) { const t = d; d = mo+1; mo = t-1; }
+    const dt = new Date(y, mo, d);
+    return isNaN(dt) ? null : dt;
+  }
+  m = str.match(/^(\d{1,2})[\/\-\s]+([A-Za-z]{3,})[\/\-\s]+(\d{2,4})$/);
+  if (m) {
+    let y = +m[3]; if (y < 100) y += 2000;
+    const mo = months[m[2].slice(0,3).toLowerCase()];
+    if (mo == null) return null;
+    const dt = new Date(y, mo, +m[1]);
+    return isNaN(dt) ? null : dt;
+  }
+  m = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  if (m) {
+    const dt = new Date(+m[1], +m[2]-1, +m[3]);
+    return isNaN(dt) ? null : dt;
+  }
+  const dt = new Date(str);
+  return isNaN(dt) ? null : dt;
+}
+function isoDate(dt){
+  if (!dt) return "—";
+  const d = String(dt.getDate()).padStart(2,"0");
+  const m = String(dt.getMonth()+1).padStart(2,"0");
+  return `${d}/${m}/${dt.getFullYear()}`;
+}
+function monthKeyFromDate(dt, fallback){
+  if (!dt) return fallback || "Unknown";
+  const mon = String(dt.getMonth()+1).padStart(2,"0");
+  return mon + "-" + dt.getFullYear();
+}
+function lastYearWindow(txns){
+  const dated = txns.filter(t => t.dt);
+  const undated = txns.filter(t => !t.dt);
+  if (!dated.length) return {rows: txns, from: null, to: null, dated: false, dropped: 0};
+  const max = new Date(Math.max(...dated.map(t => t.dt.getTime())));
+  const from = new Date(max);
+  from.setFullYear(from.getFullYear() - 1);
+  from.setHours(0,0,0,0);
+  const rows = dated.filter(t => t.dt >= from).concat(undated);
+  return {rows, from, to: max, dated: true, dropped: dated.length - dated.filter(t => t.dt >= from).length};
+}
+function renderBank(allTxns){
+  const win = lastYearWindow(allTxns);
+  const txns = win.rows;
+  const credits = txns.reduce((s,t)=>s+t.credit,0);
+  const debits = txns.reduce((s,t)=>s+t.debit,0);
+  const net = credits - debits;
+  const months = {};
+  txns.forEach(t => {
+    const key = monthKeyFromDate(t.dt, t.date);
+    if (!months[key]) months[key] = {c:0,d:0,n:0};
+    months[key].c += t.credit; months[key].d += t.debit; months[key].n += 1;
+  });
+  const maxFlow = Math.max(1, ...Object.values(months).map(m => m.c+m.d));
+  const topCredits = [...txns].filter(t=>t.credit>0).sort((a,b)=>b.credit-a.credit).slice(0,10);
+  const topDebits = [...txns].filter(t=>t.debit>0).sort((a,b)=>b.debit-a.debit).slice(0,10);
+  const regularCredits = findRegular(txns, "credit");
+  const regularDebits = findRegular(txns, "debit");
+  const flags = [];
+  const bounce = txns.filter(t => /bounce|return|insufficient|i\/w|ecs return|nach fail/i.test(t.desc));
+  const charges = txns.filter(t => /charge|fee|gst|penalty|interest/i.test(t.desc) && t.debit);
+  if (bounce.length) flags.push(`${bounce.length} possible bounce / return line(s)`);
+  if (charges.length) flags.push(`${charges.length} fee / charge line(s)`);
+  if (regularDebits.some(r => r.tag === "EMI")) flags.push("Repeating EMI-like debits found");
+  if (regularCredits.some(r => r.tag === "Salary")) flags.push("Repeating salary-like credits found");
+
+  const period = win.dated
+    ? `${isoDate(win.from)} → ${isoDate(win.to)}`
+    : "dates not parsed — using full file";
+
+  document.getElementById("bankOut").innerHTML = `
+    <div class="results">
+      <div class="result"><span>Analysis window</span><strong>Latest 1 year</strong><span>${esc(period)}</span></div>
+      <div class="result good"><span>Credits (1 yr)</span><strong>${inr(credits)}</strong></div>
+      <div class="result warn"><span>Debits (1 yr)</span><strong>${inr(debits)}</strong></div>
+      <div class="result"><span>Net flow</span><strong>${inr(net)}</strong></div>
+      <div class="result"><span>Transactions</span><strong>${txns.length}</strong><span>${win.dropped ? win.dropped + " older lines excluded" : "in window"}</span></div>
+    </div>
+    ${flags.length ? `<p class="hint" style="margin-top:14px">Flags: ${flags.map(esc).join(" • ")}</p>` : ""}
+
+    <div class="analysis-grid">
+      <div>
+        <h4 class="block-title">10 highest credits</h4>
+        ${rankedTable(topCredits, "credit")}
+      </div>
+      <div>
+        <h4 class="block-title">10 highest debits</h4>
+        ${rankedTable(topDebits, "debit")}
+      </div>
+    </div>
+
+    <div class="analysis-grid">
+      <div>
+        <h4 class="block-title">Regular credit analysis</h4>
+        ${regularTable(regularCredits, "credit")}
+      </div>
+      <div>
+        <h4 class="block-title">Regular debit analysis</h4>
+        ${regularTable(regularDebits, "debit")}
+      </div>
+    </div>
+
+    <h4 class="block-title">Monthly flow (1 year)</h4>
+    <div class="month-bars">
+      ${Object.keys(months).sort((a,b) => monthSort(a)-monthSort(b)).map(k => `
+        <div class="bar-row"><span>${esc(k)}</span>
+          <div class="bar"><i style="width:${((months[k].c+months[k].d)/maxFlow)*100}%"></i></div>
+          <span>C ${fmt(months[k].c)} / D ${fmt(months[k].d)}</span>
+        </div>`).join("")}
+    </div>
+
+    <h4 class="block-title">All lines in 1-year window</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Date</th><th>Narration</th><th>Credit</th><th>Debit</th><th>Balance</th></tr></thead>
+        <tbody>
+          ${txns.map(t => `<tr>
+            <td>${esc(t.dt ? isoDate(t.dt) : t.date)}</td><td class="desc">${esc(t.desc)}</td>
+            <td class="cr">${t.credit?inr(t.credit):""}</td>
+            <td class="dr">${t.debit?inr(t.debit):""}</td>
+            <td>${t.balance!=null?inr(t.balance):""}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>`;
+  return `Latest 1 year: ${txns.length} lines` + (win.dated ? ` (${isoDate(win.from)} to ${isoDate(win.to)})` : "") + `.`;
+}
+function monthSort(key){
+  const p = String(key).split("-");
+  if (p.length === 2 && p[1].length === 4) return (+p[1])*100 + (+p[0]);
+  return 0;
+}
+function rankedTable(rows, field){
+  if (!rows.length) return `<p class="hint">None found in the 1-year window.</p>`;
+  return `<div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Date</th><th>Narration</th><th>Amount</th></tr></thead>
+    <tbody>
+      ${rows.map((t,i) => `<tr>
+        <td class="rank">${i+1}</td>
+        <td>${esc(t.dt ? isoDate(t.dt) : t.date)}</td>
+        <td class="desc">${esc(t.desc)}</td>
+        <td class="${field==="credit"?"cr":"dr"}">${inr(t[field])}</td>
+      </tr>`).join("")}
+    </tbody>
+  </table></div>`;
+}
+function regularTable(rows, field){
+  if (!rows.length) return `<p class="hint">No regular ${field} pattern (need 3+ similar repeats).</p>`;
+  return `<div class="table-wrap"><table>
+    <thead><tr><th>Pattern / narration</th><th>Avg amt</th><th>Times</th><th>Months</th><th>Span</th></tr></thead>
+    <tbody>
+      ${rows.map(r => `<tr>
+        <td class="desc">${esc(r.label)}<div class="pill">${esc(r.tag)}</div></td>
+        <td class="${field==="credit"?"cr":"dr"}">${inr(r.amount)}</td>
+        <td>${r.count}</td>
+        <td>${r.months}</td>
+        <td>${esc(r.span)}</td>
+      </tr>`).join("")}
+    </tbody>
+  </table></div>`;
+}
+function normalizeNarr(s){
+  return String(s||"").toLowerCase()
+    .replace(/\b[a-z0-9._%+-]+@[a-z0-9.-]+\b/g," ")
+    .replace(/\b(?:upi|imps|neft|rtgs|ach|nach|ecs|cms|ref|txn|id|utr)\b/g," ")
+    .replace(/[0-9x*]{4,}/g," ")
+    .replace(/[^a-z\s]/g," ")
+    .replace(/\s+/g," ").trim();
+}
+function classifyRegular(desc, field, amount){
+  const d = (desc||"").toLowerCase();
+  if (field === "credit") {
+    if (/salary|sal |payroll|wages/.test(d)) return "Salary";
+    if (/interest|int\.? cr/.test(d)) return "Interest";
+    if (/refund|reversal|cashback/.test(d)) return "Refund";
+    if (/neft|imps|rtgs|transfer|from/.test(d) && amount >= 15000) return "Inward transfer";
+    if (amount >= 20000) return "Large repeating credit";
+    return "Repeating credit";
+  }
+  if (/emi|loan|homeloan|housing|equated/.test(d)) return "EMI";
+  if (/sip|mutual fund|groww|zerodha|mf /.test(d)) return "SIP / investment";
+  if (/insurance|lic |premium/.test(d)) return "Insurance";
+  if (/rent|house rent/.test(d)) return "Rent";
+  if (/charge|fee|gst|penalty/.test(d)) return "Charges";
+  if (/nach|ecs|ach|standing/.test(d)) return "NACH / ECS";
+  if (amount >= 3000 && amount <= 250000) return "Possible EMI";
+  return "Repeating debit";
+}
+function findRegular(txns, field){
+  const items = txns.filter(t => (t[field]||0) > 0);
+  const groups = {};
+  items.forEach(t => {
+    const amt = t[field];
+    const bucket = String(Math.round(amt / Math.max(10, amt*0.02)) * Math.max(10, Math.round(amt*0.02)));
+    const fp = normalizeNarr(t.desc).split(" ").filter(w => w.length>2).slice(0,4).join(" ") || "other";
+    const key = fp + "|" + bucket;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(t);
+  });
+  const out = [];
+  Object.values(groups).forEach(list => {
+    if (list.length < 3) return;
+    const months = new Set(list.map(t => monthKeyFromDate(t.dt, t.date)));
+    if (months.size < 2 && list.length < 4) return;
+    const avg = list.reduce((s,t)=>s+t[field],0) / list.length;
+    const dated = list.map(t => t.dt).filter(Boolean).sort((a,b)=>a-b);
+    const span = dated.length >= 2 ? `${isoDate(dated[0])} → ${isoDate(dated[dated.length-1])}` : (list[0].date || "—");
+    const sample = list.slice().sort((a,b)=>b[field]-a[field])[0];
+    out.push({
+      label: (sample.desc || fpLabel(list)).slice(0,72),
+      amount: avg,
+      count: list.length,
+      months: months.size,
+      span,
+      tag: classifyRegular(sample.desc, field, avg)
+    });
+  });
+  return out.sort((a,b)=>b.count-a.count || b.amount-a.amount).slice(0,8);
+}
+function fpLabel(list){
+  return normalizeNarr(list[0].desc) || "Repeating pattern";
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+}
+let deferredInstallPrompt = null;
+const installBtn = document.getElementById("installBtn");
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installBtn.hidden = false;
+});
+installBtn?.addEventListener("click", async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  installBtn.hidden = true;
+});
+window.addEventListener("appinstalled", () => { installBtn.hidden = true; deferredInstallPrompt = null; });
+</script>
+</body>
+</html>
