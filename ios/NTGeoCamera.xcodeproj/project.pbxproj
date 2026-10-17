@@ -1,0 +1,33 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+		AA0000000000000000000001 /* NTGeoCameraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTGeoCameraApp.swift; sourceTree = "<group>"; };
+		AA0000000000000000000004 /* Library.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
+		AA0000000000000000000005 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA0000000000000000000007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA0000000000000000000008 /* NTGeoCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NTGeoCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB0000000000000000000001 /* NTGeoCamera */ = {isa = PBXGroup; children = (AA0000000000000000000001, AA0000000000000000000004, AA0000000000000000000005, AA0000000000000000000006, AA0000000000000000000007); path = NTGeoCamera; sourceTree = "<group>"; };
+		BB0000000000000000000002 /* Products */ = {isa = PBXGroup; children = (AA0000000000000000000008); name = Products; sourceTree = "<group>"; };
+		BB0000000000000000000003 = {isa = PBXGroup; children = (BB0000000000000000000001, BB0000000000000000000002); sourceTree = "<group>"; };
+		CC0000000000000000000001 /* NTGeoCameraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000001; };
+		CC0000000000000000000004 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000004; };
+		CC0000000000000000000005 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000005; };
+		CC0000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000007; };
+		DD0000000000000000000001 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (CC0000000000000000000001, CC0000000000000000000004, CC0000000000000000000005); runOnlyForDeploymentPostprocessing = 0; };
+		DD0000000000000000000002 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (CC0000000000000000000007); runOnlyForDeploymentPostprocessing = 0; };
+		DD0000000000000000000003 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		EE0000000000000000000001 /* NTGeoCamera */ = {isa = PBXNativeTarget; buildConfigurationList = FF0000000000000000000003; buildPhases = (DD0000000000000000000001, DD0000000000000000000002, DD0000000000000000000003); buildRules = (); dependencies = (); name = NTGeoCamera; productName = NTGeoCamera; productReference = AA0000000000000000000008; productType = "com.apple.product-type.application"; };
+		EE0000000000000000000002 /* Project object */ = {isa = PBXProject; attributes = {LastUpgradeCheck = 1500; }; buildConfigurationList = FF0000000000000000000001; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base); mainGroup = BB0000000000000000000003; productRefGroup = BB0000000000000000000002; projectDirPath = ""; projectRoot = ""; targets = (EE0000000000000000000001); };
+		FF0000000000000000000001 /* Build configuration list for PBXProject */ = {isa = XCConfigurationList; buildConfigurations = (FF0000000000000000000002, FF0000000000000000000004); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		FF0000000000000000000002 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; SDKROOT = iphoneos; }; name = Debug; };
+		FF0000000000000000000004 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; SDKROOT = iphoneos; }; name = Release; };
+		FF0000000000000000000003 /* Build configuration list for PBXNativeTarget */ = {isa = XCConfigurationList; buildConfigurations = (FF0000000000000000000005, FF0000000000000000000006); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		FF0000000000000000000005 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 5; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = NTGeoCamera/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 16.0; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks"; MARKETING_VERSION = 1.4.0; PRODUCT_BUNDLE_IDENTIFIER = com.nt280793.geocamera; PRODUCT_NAME = NTGeoCamera; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Debug; };
+		FF0000000000000000000006 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 5; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = NTGeoCamera/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 16.0; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks"; MARKETING_VERSION = 1.4.0; PRODUCT_BUNDLE_IDENTIFIER = com.nt280793.geocamera; PRODUCT_NAME = NTGeoCamera; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; VALIDATE_PRODUCT = YES; }; name = Release; };
+	};
+	rootObject = EE0000000000000000000002;
+}
